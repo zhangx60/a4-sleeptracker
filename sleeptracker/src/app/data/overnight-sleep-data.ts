@@ -1,8 +1,8 @@
 import { SleepData } from './sleep-data';
 
 export class OvernightSleepData extends SleepData {
-	private sleepStart:Date;
-	private sleepEnd:Date;
+	public sleepStart:Date;
+	public sleepEnd:Date;
 
 	constructor(sleepStart:Date, sleepEnd:Date) {
 		super();
@@ -23,5 +23,17 @@ export class OvernightSleepData extends SleepData {
 
 	override dateString():string {
 		return "Night of " + this.sleepStart.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+	}
+		// "11:11 PM – 8:11 AM"
+	timeRangeString():string {
+		var start = this.sleepStart.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+		var end = this.sleepEnd.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+		return start + " – " + end;
+	}
+
+	// Total hours slept as a number
+	hoursSlept():number {
+		var difference_ms = this.sleepEnd.getTime() - this.sleepStart.getTime();
+		return difference_ms / (1000*60*60);
 	}
 }
