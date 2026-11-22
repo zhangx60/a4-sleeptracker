@@ -1,20 +1,71 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+    <ion-title>Sleep Tracker</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
+      <ion-title size="large">Sleep Tracker</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+  //Card 1: Last night's sleep
+  <ion-card>
+    <ion-card-header>
+      <ion-card-subtitle>Last night</ion-card-subtitle>
+      @if (lastNight) {
+        <ion-card-title>{{ lastNight.summaryString() }}</ion-card-title>
+      } @else {
+        <ion-card-title>No sleep logged yet</ion-card-title>
+      }
+    </ion-card-header>
+    <ion-card-content>
+      @if (lastNight) {
+        <p>{{ lastNight.dateString() }}</p>
+        <p>{{ lastNight.timeRangeString() }}</p>
+        <p class="comment">{{ sleepComment(lastNight.hoursSlept()) }}</p>
+      } @else {
+        <p>Log when you went to bed and woke up to see it here.</p>
+      }
+      <ion-button expand="block" routerLink="/log-sleep" class="big-button">
+        <ion-icon slot="start" name="moon"></ion-icon>
+        Log last night's sleep
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  // Card 2: Today's sleepiness
+  <ion-card>
+    <ion-card-header>
+      <ion-card-subtitle>Today</ion-card-subtitle>
+      <ion-card-title>How sleepy you've felt</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      @if (todaySleepiness.length == 0) {
+        <p>Nothing logged today. Check in a few times a day — like before and after coffee.</p>
+      } @else {
+        <ion-list lines="none">
+          @for (entry of todaySleepiness; track entry.id) {
+            <ion-item>
+              <ion-badge slot="start" [color]="sleepinessColor(entry.loggedValue)">{{ entry.loggedValue }}</ion-badge>
+              <ion-label class="ion-text-wrap">{{ entry.summaryString() }}</ion-label>
+              <ion-note slot="end">{{ entry.timeString() }}</ion-note>
+            </ion-item>
+          }
+        </ion-list>
+      }
+      <ion-button expand="block" color="secondary" routerLink="/log-sleepiness" class="big-button">
+        <ion-icon slot="start" name="cafe"></ion-icon>
+        How sleepy am I now?
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  //Link to full history
+  <ion-button expand="block" fill="clear" routerLink="/history">
+    <ion-icon slot="start" name="list"></ion-icon>
+    See all history
+  </ion-button>
 </ion-content>
