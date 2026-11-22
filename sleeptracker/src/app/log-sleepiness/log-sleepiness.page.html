@@ -1,13 +1,48 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>log-sleepiness</ion-title>
+    <ion-buttons slot="start"><ion-back-button defaultHref="/home"></ion-back-button></ion-buttons>
+    <ion-title>Log sleepiness</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">log-sleepiness</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <main class="ion-padding">
+    <h1 id="scale-heading">How alert do you feel?</h1>
+    <p>Choose the Stanford Sleepiness Scale level that fits right now. The current time is saved automatically.</p>
+    <ion-list>
+      <ion-radio-group aria-labelledby="scale-heading" [value]="selectedLevel"
+        (ionChange)="selectedLevel = $event.detail.value">
+        @for (description of levels; track $index) {
+          <ion-item>
+            <ion-radio [value]="$index + 1" labelPlacement="end" class="ion-text-wrap">
+              <ion-label><strong>{{ $index + 1 }}</strong> · {{ description }}</ion-label>
+            </ion-radio>
+          </ion-item>
+        }
+      </ion-radio-group>
+    </ion-list>
+    @if (error) { <p role="alert">{{ error }}</p> }
+    <ion-button expand="block" [disabled]="selectedLevel === null || saving" (click)="save()">
+      Save sleepiness
+    </ion-button>
+    @if (reminders.supported) {
+      <section class="reminder" aria-labelledby="reminder-heading">
+        <h2 id="reminder-heading">Daily check-in reminder</h2>
+        <p>Get a notification to log your sleepiness at a time you choose.</p>
+        <label for="reminder-time">Reminder time</label>
+        <input id="reminder-time" type="time" [value]="reminderTime"
+          [disabled]="reminderBusy" (input)="reminderTime = $any($event.target).value">
+        <ion-button expand="block" fill="outline" [disabled]="reminderBusy || !reminderTime"
+          (click)="setReminder()">
+          {{ reminderActive ? 'Update reminder' : 'Set daily reminder' }}
+        </ion-button>
+        @if (reminderActive) {
+          <ion-button expand="block" fill="clear" [disabled]="reminderBusy" (click)="disableReminder()">
+            Turn off reminder
+          </ion-button>
+        }
+        @if (reminderStatus) { <p role="status">{{ reminderStatus }}</p> }
+      </section>
+    }
+  </main>
 </ion-content>

@@ -1,13 +1,53 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>history</ion-title>
+    <ion-buttons slot="start"><ion-back-button defaultHref="/home"></ion-back-button></ion-buttons>
+    <ion-title>History</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">history</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <main class="ion-padding">
+    <ion-segment aria-label="Log category" [value]="category" (ionChange)="selectCategory($event.detail.value)">
+      <ion-segment-button value="overnight"><ion-label>Overnight</ion-label></ion-segment-button>
+      <ion-segment-button value="sleepiness"><ion-label>Sleepiness</ion-label></ion-segment-button>
+    </ion-segment>
+
+    @if (loading) {
+      <p role="status">Loading history…</p>
+    } @else if (error) {
+      <p role="alert">{{ error }}</p>
+    } @else if (entries.length === 0) {
+      <section class="empty-state">
+        <h2>{{ category === 'overnight' ? 'No overnight entries yet' : 'No sleepiness entries yet' }}</h2>
+        <ion-button [routerLink]="category === 'overnight' ? '/log-sleep' : '/log-sleepiness'">
+          {{ category === 'overnight' ? 'Log overnight sleep' : 'Log sleepiness' }}
+        </ion-button>
+      </section>
+    } @else {
+      <ion-list>
+        @for (entry of entries; track entry.id) {
+          <ion-item-sliding #sliding>
+            <ion-item>
+              <ion-label class="ion-text-wrap">
+                <p>{{ entryDate(entry) | date:'EEE, MMM d, y' }}</p>
+                <h2>{{ entry.summaryString() }}</h2>
+                @if (overnight(entry); as sleep) {
+                  <p>Bedtime {{ sleep.sleepStart | date:'MMM d, h:mm a' }}</p>
+                  <p>Wake-up {{ sleep.sleepEnd | date:'MMM d, h:mm a' }}</p>
+                } @else {
+                  <p>{{ entry.loggedAt | date:'shortTime' }}</p>
+                }
+              </ion-label>
+              <ion-button slot="end" fill="clear" color="danger" (click)="remove(entry, sliding)">
+                Delete
+              </ion-button>
+            </ion-item>
+            <ion-item-options side="end">
+              <ion-item-option color="danger" (click)="remove(entry, sliding)">Delete</ion-item-option>
+            </ion-item-options>
+          </ion-item-sliding>
+        }
+      </ion-list>
+    }
+  </main>
 </ion-content>
