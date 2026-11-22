@@ -14,7 +14,7 @@
   <!-- Card 1: Last night's sleep -->
   <ion-card>
     <ion-card-header>
-      <ion-card-subtitle>Last night</ion-card-subtitle>
+    <ion-card-subtitle>{{ lastNightLabel }}</ion-card-subtitle>
       @if (lastNight) {
         <ion-card-title>{{ lastNight.summaryString() }}</ion-card-title>
       } @else {

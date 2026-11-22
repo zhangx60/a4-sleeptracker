@@ -50,6 +50,16 @@ export class HomePage {
 		}
 		return latest;
 	}
+	
+	// "Last night" only if the latest sleep ended today; otherwise "Latest sleep"
+	get lastNightLabel():string {
+		var latest = this.lastNight;
+		if (latest != null && latest.sleepEnd.toDateString() == new Date().toDateString()) {
+			return 'Last night';
+		}
+		return 'Latest sleep';
+	}
+
 	// All sleepiness logs from today, newest first
 	get todaySleepiness():StanfordSleepinessData[] {
 		var today = new Date();
