@@ -13,12 +13,15 @@ export class SleepService {
 	// Keys used to save data in Preferences storage
 	private static OvernightKey:string = 'overnightData';
 	private static SleepinessKey:string = 'sleepinessData';
-	// load from storage once
-	private static DataLoaded:boolean = false;
+	// Remembers the loading job so we only read storage once,
+	// and so everything else can wait for it to finish
+	private static LoadingPromise:Promise<void> | null = null;
 	public static AllOvernightData:OvernightSleepData[] = [];
 	public static AllSleepinessData:StanfordSleepinessData[] = [];
 
 	constructor() {
+		// Start reading saved data as soon as any page uses this service
+		this.loadData();
 		if(SleepService.LoadDefaultData) {
 			this.addDefaultData();
 		SleepService.LoadDefaultData = false;
@@ -44,20 +47,23 @@ export class SleepService {
 		this.logOvernightData(new OvernightSleepData(goToBed, wakeUp));
 	}
 
-	public logOvernightData(sleepData:OvernightSleepData) {
+	public async logOvernightData(sleepData:OvernightSleepData) {
+		await this.loadData(); // wait until saved data is loaded, so we don't overwrite it
 		SleepService.AllSleepData.push(sleepData);
 		SleepService.AllOvernightData.push(sleepData);
-		this.saveData();
+		await this.saveData();
 	}
 
-	public logSleepinessData(sleepData:StanfordSleepinessData) {
+	public async logSleepinessData(sleepData:StanfordSleepinessData) {
+		await this.loadData(); // wait until saved data is loaded, so we don't overwrite it
 		SleepService.AllSleepData.push(sleepData);
 		SleepService.AllSleepinessData.push(sleepData);
-		this.saveData();
+		await this.saveData();
 	}
 
 	// Delete Data
-	public deleteOvernightData(id:string) {
+	public async deleteOvernightData(id:string) {
+		await this.loadData();
 		var newList:OvernightSleepData[] = [];
 		for (var i = 0; i < SleepService.AllOvernightData.length; i++) {
 			if (SleepService.AllOvernightData[i].id != id) {
@@ -66,9 +72,10 @@ export class SleepService {
 		}
 		SleepService.AllOvernightData = newList;
 		this.rebuildAllSleepData();
-		this.saveData();
+		await this.saveData();
 	}
-	public deleteSleepinessData(id:string) {
+	public async deleteSleepinessData(id:string) {
+		await this.loadData();
 		var newList:StanfordSleepinessData[] = [];
 		for (var i = 0; i < SleepService.AllSleepinessData.length; i++) {
 			if (SleepService.AllSleepinessData[i].id != id) {
@@ -77,7 +84,7 @@ export class SleepService {
 		}
 		SleepService.AllSleepinessData = newList;
 		this.rebuildAllSleepData();
-		this.saveData();
+		await this.saveData();
 	}
 	// AllSleepData = the two lists put together
 	private rebuildAllSleepData() {
@@ -104,13 +111,17 @@ export class SleepService {
 		});
 	}
 
-	// Call this once when the app opens at home page
-	public async loadData() {
-		if (SleepService.DataLoaded) {
-			return;
+	// Safe to call many times: it only reads storage the first time,
+	// and every caller gets the same loading job to wait on
+	public loadData():Promise<void> {
+		if (SleepService.LoadingPromise == null) {
+			SleepService.LoadingPromise = this.readFromStorage();
 		}
-		SleepService.DataLoaded = true;
+		return SleepService.LoadingPromise;
+	}
 
+	// The actual reading from storage (only runs once, through loadData)
+	private async readFromStorage() {
 		var overnightResult = await Preferences.get({ key: SleepService.OvernightKey });
 		var sleepinessResult = await Preferences.get({ key: SleepService.SleepinessKey });
 
