@@ -44,21 +44,27 @@
 
 9. How can a person log sleepiness during the day in your app? Why did you choose to support logging sleepiness in this way?
 
+On the Log sleepiness page, pick one of the seven Stanford Sleepiness Scale levels and tap Save sleepiness. The app records the current time automatically so it is quick to check in several times a day.
 
 
 10. How can a person view the data they logged in your app? Why did you choose to support viewing logged data in this way?
 
+Open History and use the Overnight and Sleepiness tabs to see each type of entry, newest first. We split them into two tabs because bedtime and wake-up are easier to compare when they are grouped together, and daytime check-ins can happen several times a day.
 
 
 11. Which feature choose--using a native device resource, backing up logged data, or both?
 
+We used both Capacitor Local Notifications for daily reminders and Capacitor Preferences to keep both types of logs after closing or refreshing the app.
 
 
 12. If you used a native device resource, what feature did you add? How does this feature change the app's experience for a user?
 
+In the native app, users can choose a daily check-in time on the Log sleepiness page and turn the reminder off whenever they want. The device notification helps users remember to check in during the day, and tapping it opens the rating page.
 
 
 13. If you backed up logged data, where does it back up to?
 
 
 14. How does your app implement or follow principles of good mobile design?
+
+The home screen shows the latest overnight entry, today's sleepiness logs, and buttons for both logging tasks, and the sleepiness form keeps Save disabled until a level is selected. We used Ionic back buttons and tabs for familiar navigation and gave users an Undo after deleting a history entry.
