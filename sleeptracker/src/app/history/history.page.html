@@ -12,6 +12,8 @@
       <ion-segment-button value="sleepiness"><ion-label>Sleepiness</ion-label></ion-segment-button>
     </ion-segment>
 
+    @if (saveError) { <p role="alert">{{ saveError }}</p> }
+
     @if (loading) {
       <p role="status">Loading history…</p>
     } @else if (error) {
@@ -38,12 +40,12 @@
                   <p>{{ entry.loggedAt | date:'shortTime' }}</p>
                 }
               </ion-label>
-              <ion-button slot="end" fill="clear" color="danger" (click)="remove(entry, sliding)">
+              <ion-button slot="end" fill="clear" color="danger" [disabled]="saving" (click)="remove(entry, sliding)">
                 Delete
               </ion-button>
             </ion-item>
             <ion-item-options side="end">
-              <ion-item-option color="danger" (click)="remove(entry, sliding)">Delete</ion-item-option>
+              <ion-item-option color="danger" [disabled]="saving" (click)="remove(entry, sliding)">Delete</ion-item-option>
             </ion-item-options>
           </ion-item-sliding>
         }

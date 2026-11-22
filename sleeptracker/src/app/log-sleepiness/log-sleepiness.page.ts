@@ -101,10 +101,9 @@ export class LogSleepinessPage {
     this.saving = true;
     this.error = '';
     try {
-      await this.sleepService.loadData();
-      this.sleepService.logSleepinessData(new StanfordSleepinessData(level));
+      await this.sleepService.logSleepinessData(new StanfordSleepinessData(level));
     } catch {
-      this.error = 'Could not load your sleep log. Try again.';
+      this.error = 'Could not confirm the save. Check History before trying again.';
       this.saving = false;
       return;
     }

@@ -30,10 +30,13 @@ export class HistoryPage {
   entries: Entry[] = [];
   loading = true;
   error = '';
+  saving = false;
+  saveError = '';
 
   async ionViewWillEnter() {
     this.loading = true;
     this.error = '';
+    this.saveError = '';
     try {
       await this.sleepService.loadData();
       this.refresh();
@@ -60,16 +63,25 @@ export class HistoryPage {
   }
 
   async remove(entry: Entry, sliding: IonItemSliding) {
-    if (!this.entries.includes(entry)) {
+    if (this.saving || !this.entries.includes(entry)) {
       return;
     }
+    this.saving = true;
+    this.saveError = '';
     void sliding.close();
-    if (entry instanceof OvernightSleepData) {
-      this.sleepService.deleteOvernightData(entry.id);
-    } else {
-      this.sleepService.deleteSleepinessData(entry.id);
+    try {
+      if (entry instanceof OvernightSleepData) {
+        await this.sleepService.deleteOvernightData(entry.id);
+      } else {
+        await this.sleepService.deleteSleepinessData(entry.id);
+      }
+    } catch {
+      this.saveError = 'Could not confirm that the deletion was saved.';
+      return;
+    } finally {
+      this.refresh();
+      this.saving = false;
     }
-    this.refresh();
 
     const toast = await this.toasts.create({
       message: 'Entry deleted',
@@ -77,17 +89,31 @@ export class HistoryPage {
       buttons: [{
         text: 'Undo',
         role: 'undo',
-        handler: () => {
-          if (entry instanceof OvernightSleepData) {
-            this.sleepService.logOvernightData(entry);
-          } else {
-            this.sleepService.logSleepinessData(entry);
-          }
-          this.refresh();
-        }
+        handler: () => this.restore(entry)
       }]
     });
     await toast.present();
+  }
+
+  private async restore(entry: Entry) {
+    if (this.saving) {
+      return false;
+    }
+    this.saving = true;
+    this.saveError = '';
+    try {
+      if (entry instanceof OvernightSleepData) {
+        await this.sleepService.logOvernightData(entry);
+      } else {
+        await this.sleepService.logSleepinessData(entry);
+      }
+    } catch {
+      this.saveError = 'Could not confirm that the restored entry was saved.';
+    } finally {
+      this.refresh();
+      this.saving = false;
+    }
+    return true;
   }
 
   private refresh() {
