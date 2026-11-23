@@ -141,6 +141,9 @@ export class LogSleepPage {
 		// Go straight to the sleepiness check-in.
 		// replaceUrl: this form is taken out of the back history,
 		// so Back on the sleepiness page goes home instead of to this form again.
-		this.navController.navigateForward('/log-sleepiness', { replaceUrl: true });
+				this.navController.navigateForward('/log-sleepiness', {
+			replaceUrl: true,
+			queryParams: { at: this.wakeTime }
+		});
 	}
 }

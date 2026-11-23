@@ -94,3 +94,160 @@ time {
   margin-top: 0.75rem;
 }
 
+
+/* Greeting */
+
+.greeting {
+  margin: 0 0 0.2rem;
+  color: #cce7ff;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+}
+
+/*Sleep goal progress bar  */
+
+.goal {
+  margin-bottom: 0.9rem;
+}
+
+.goal-bar {
+  height: 0.55rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.goal-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #6f8fb8, var(--ion-color-primary));
+  transition: width 0.6s ease;
+}
+
+/* A full night gets a soft glow */
+.goal-fill.full {
+  box-shadow: 0 0 10px rgba(169, 213, 255, 0.6);
+}
+
+.goal span {
+  display: block;
+  margin-top: 0.4rem;
+  color: var(--journal-muted);
+  font-size: 0.85rem;
+}
+
+/* This week chart */
+
+.week {
+  margin-top: 0.85rem;
+}
+
+.chart {
+  margin-top: 1rem;
+}
+
+.bars {
+  position: relative;
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-end;
+  height: 8rem;
+  padding-right: 1.75rem; /* room for the "8h" label */
+}
+
+/* Dashed line at the sleep goal (8h out of a 10h-tall chart = 80%) */
+.goal-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 80%;
+  border-top: 1px dashed rgba(204, 231, 255, 0.35);
+}
+
+.goal-line span {
+  position: absolute;
+  right: 0;
+  top: -0.5rem;
+  color: var(--journal-muted);
+  font-size: 0.7rem;
+}
+
+.bar-col {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+}
+
+.bar-value {
+  margin-bottom: 0.25rem;
+  color: var(--journal-muted);
+  font-size: 0.7rem;
+}
+
+.bar {
+  width: 100%;
+  max-width: 2.2rem;
+  border-radius: 0.5rem 0.5rem 0.2rem 0.2rem;
+  background: linear-gradient(180deg, var(--ion-color-primary), #4f78a6);
+  transition: height 0.6s ease;
+}
+
+/* Less than 7 hours: dimmer bar */
+.bar.short {
+  background: linear-gradient(180deg, #7d8fa8, #4a5b72);
+}
+
+/* No log that day: tiny placeholder */
+.bar.empty {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.labels {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+  padding-right: 1.75rem; /* line up with the bars */
+}
+
+.labels span {
+  flex: 1;
+  color: var(--journal-muted);
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+.labels span.today {
+  color: var(--ion-color-primary);
+  font-weight: 700;
+}
+
+/*Fade-in animation when the home page opens*/
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeUp 0.5s ease both;
+}
+
+.delay-1 { animation-delay: 0.08s; }
+.delay-2 { animation-delay: 0.16s; }
+.delay-3 { animation-delay: 0.24s; }
+
+/* Respect the phone's "Reduce Motion" setting */
+@media (prefers-reduced-motion: reduce) {
+  .fade-in {
+    animation: none;
+  }
+}
