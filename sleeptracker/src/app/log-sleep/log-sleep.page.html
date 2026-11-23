@@ -1,13 +1,60 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>log-sleep</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Log Sleep</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">log-sleep</ion-title>
+      <ion-title size="large">Log Sleep</ion-title>
     </ion-toolbar>
   </ion-header>
+
+  <p class="hint ion-padding-horizontal">When did you go to bed and wake up?</p>
+
+  <ion-list inset="true">
+    <!-- Bedtime -->
+    <ion-item>
+      <ion-label>Bedtime</ion-label>
+      <ion-datetime-button datetime="bedtime" slot="end"></ion-datetime-button>
+    </ion-item>
+
+    <!-- Wake-up time -->
+    <ion-item>
+      <ion-label>Wake up</ion-label>
+      <ion-datetime-button datetime="waketime" slot="end"></ion-datetime-button>
+    </ion-item>
+  </ion-list>
+
+  <!-- The pop-up pickers that the two buttons above open -->
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime id="bedtime" presentation="date-time" [(ngModel)]="bedtime" [max]="maxTime"></ion-datetime>
+    </ng-template>
+  </ion-modal>
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime id="waketime" presentation="date-time" [(ngModel)]="wakeTime" [max]="maxTime"></ion-datetime>
+    </ng-template>
+  </ion-modal>
+
+  <!-- Live preview / error message -->
+  <div class="ion-padding-horizontal">
+    @if (errorMessage == '') {
+      <p class="duration">You slept <strong>{{ durationText }}</strong></p>
+    } @else {
+      <ion-note color="danger" class="error">{{ errorMessage }}</ion-note>
+    }
+  </div>
+
+  <div class="ion-padding">
+    <ion-button expand="block" class="big-button" [disabled]="errorMessage != ''" (click)="saveSleep()">
+      <ion-icon slot="start" name="checkmark"></ion-icon>
+      Save
+    </ion-button>
+  </div>
 </ion-content>
