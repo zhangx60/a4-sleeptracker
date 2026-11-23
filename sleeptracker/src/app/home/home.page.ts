@@ -16,6 +16,9 @@ import { SleepService } from '../services/sleep.service';
 export class HomePage {
 	// How many hours of sleep we treat as a full night
 	goalHours:number = 8;
+	// Current time for the flip clock (updated every second while this page is open)
+	now:Date = new Date();
+	private clockTimer:any = null;
 
   constructor(public sleepService:SleepService) {
 		addIcons({ moon, sunny, sunnyOutline, timeOutline, barChartOutline });
@@ -25,8 +28,62 @@ export class HomePage {
 		// Load saved data from storage when the app opens
 		await this.sleepService.loadData();
 	}
+	
+	/*  Flip clock */
 
-	/* ---------- Greeting ---------- */
+	// Start the clock when the home page is shown...
+	ionViewWillEnter() {
+		this.now = new Date();
+		var self = this;
+		if (this.clockTimer == null) {
+			this.clockTimer = setInterval(function() {
+				self.now = new Date();
+			}, 1000);
+		}
+	}
+
+	// ...and stop it when we leave, so it doesn't keep running in the background
+	ionViewDidLeave() {
+		if (this.clockTimer != null) {
+			clearInterval(this.clockTimer);
+			this.clockTimer = null;
+		}
+	}
+
+	// The 4 digits of the time in 12-hour format, e.g. 9:05 -> 0, 9, 0, 5.
+	// "key" changes whenever a digit changes, so Angular redraws that card
+	// and its flip animation plays.
+	get clockDigits() {
+		var hours = this.now.getHours() % 12;
+		if (hours == 0) {
+			hours = 12;
+		}
+		var text = this.twoDigits(hours) + this.twoDigits(this.now.getMinutes());
+		var digits = [];
+		for (var i = 0; i < text.length; i++) {
+			digits.push({ pos: i, value: text[i], key: i + '-' + text[i] });
+		}
+		return digits;
+	}
+
+	get ampm():string {
+		return this.now.getHours() < 12 ? 'AM' : 'PM';
+	}
+
+	// e.g. "Sunday, November 22"
+	get dateText():string {
+		return this.now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+	}
+
+	twoDigits(n:number):string {
+		if (n < 10) {
+			return '0' + n;
+		}
+		return '' + n;
+	}
+
+
+	/* Greeting  */
 
 	// "Good morning" / "Good afternoon" / "Good evening" based on the current hour
 	get greeting():string {

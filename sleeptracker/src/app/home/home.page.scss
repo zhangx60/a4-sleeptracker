@@ -251,3 +251,92 @@ time {
     animation: none;
   }
 }
+
+
+/*  Flip clock  */
+
+.flip-clock {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.9rem;
+  perspective: 400px; /* makes the flip look 3D */
+}
+
+.flip-digit {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 2.2rem;
+  height: 2.9rem;
+  border-radius: 0.5rem;
+  /* top half slightly lighter than bottom half, like a real flip card */
+  background: linear-gradient(180deg, #2a3f5c 0%, #2a3f5c 50%, #22344d 50%, #22344d 100%);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+  color: #eaf4ff;
+  font-size: 1.75rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  animation: flipIn 0.5s ease;
+  transform-origin: center;
+}
+
+/* The thin line across the middle of each card */
+.flip-digit::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.colon {
+  margin-inline: 0.1rem;
+  color: #cce7ff;
+  font-size: 1.6rem;
+  font-weight: 700;
+  animation: blink 2s steps(1) infinite;
+}
+
+.ampm {
+  align-self: flex-end;
+  margin-left: 0.35rem;
+  margin-bottom: 0.2rem;
+  color: #cce7ff;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.today {
+  margin: 0.5rem 0 0;
+  color: var(--journal-muted);
+  font-size: 0.9rem;
+}
+
+/* A changed digit flips down into place */
+@keyframes flipIn {
+  from {
+    transform: rotateX(-90deg);
+    opacity: 0.4;
+  }
+  to {
+    transform: rotateX(0deg);
+    opacity: 1;
+  }
+}
+
+/* Colon blinks once every 2 seconds */
+@keyframes blink {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flip-digit,
+  .colon {
+    animation: none;
+  }
+}

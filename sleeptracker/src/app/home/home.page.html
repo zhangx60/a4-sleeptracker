@@ -4,6 +4,18 @@
       <div>
         <p class="greeting">{{ greeting }}</p>
         <h1>Sleep Tracker</h1>
+
+        <!-- Flip clock -->
+        <div class="flip-clock" aria-hidden="true">
+          @for (digit of clockDigits; track digit.key) {
+            @if (digit.pos == 2) {
+              <span class="colon">:</span>
+            }
+            <span class="flip-digit">{{ digit.value }}</span>
+          }
+          <span class="ampm">{{ ampm }}</span>
+        </div>
+        <p class="today">{{ dateText }}</p>
       </div>
       <ion-icon [name]="isNight ? 'moon' : 'sunny'" aria-hidden="true"></ion-icon>
     </header>

@@ -37,3 +37,14 @@ input[type='time'] {
   border: 1px solid var(--journal-border);
   border-radius: 0.5rem;
 }
+
+
+/* Time row (same look as the Log Sleep page) */
+.time-list ion-item {
+  margin-bottom: 0.6rem;
+  border: 1px solid var(--journal-border);
+  border-radius: 0.875rem;
+  --min-height: 62px;
+  --padding-start: 0.75rem;
+  --inner-padding-end: 0.5rem;
+}

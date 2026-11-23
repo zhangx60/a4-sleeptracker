@@ -8,7 +8,21 @@
 <ion-content>
   <main class="journal-page">
     <h1 id="scale-heading">How alert do you feel?</h1>
-    <p>Choose the Stanford Sleepiness Scale level that fits right now. The current time is saved automatically.</p>
+        <p>Choose the Stanford Sleepiness Scale level that fits. The time is filled in for you; change it if you are logging an earlier check-in.</p>
+    <!-- When was this check-in? -->
+    <ion-list class="time-list">
+      <ion-item lines="none">
+        <ion-label>Time</ion-label>
+        <ion-datetime-button datetime="checkintime" slot="end"></ion-datetime-button>
+      </ion-item>
+    </ion-list>
+    <ion-modal [keepContentsMounted]="true">
+      <ng-template>
+        <ion-datetime id="checkintime" presentation="date-time" locale="en-US" [max]="maxTime"
+          [value]="checkInTime" (ionChange)="checkInTime = $any($event.detail.value)"
+          [showDefaultButtons]="true"></ion-datetime>
+      </ng-template>
+    </ion-modal>
     <ion-list>
       <ion-radio-group aria-labelledby="scale-heading" [value]="selectedLevel"
         (ionChange)="selectedLevel = $event.detail.value">

@@ -1,7 +1,9 @@
 import { Component, inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import {
   IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonItem,
-  IonList, IonRadio, IonRadioGroup, IonTitle, IonToolbar, NavController
+  IonList, IonRadio, IonRadioGroup, IonTitle, IonToolbar, NavController,
+  IonLabel, IonDatetime, IonDatetimeButton, IonModal
 } from '@ionic/angular/standalone';
 import { StanfordSleepinessData } from '../data/stanford-sleepiness-data';
 import { SleepService } from '../services/sleep.service';
@@ -13,12 +15,13 @@ import { SleepinessReminderService } from '../services/sleepiness-reminder.servi
   styleUrls: ['./log-sleepiness.page.scss'],
   imports: [
     IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonItem,
-    IonList, IonRadio, IonRadioGroup, IonTitle, IonToolbar
+    IonList, IonRadio, IonRadioGroup, IonTitle, IonToolbar,IonLabel, IonDatetime, IonDatetimeButton, IonModal
   ]
 })
 export class LogSleepinessPage {
   private readonly sleepService = inject(SleepService);
   private readonly nav = inject(NavController);
+  private readonly route = inject(ActivatedRoute);
 
   readonly reminders = inject(SleepinessReminderService);
   reminderTime = '14:00';
@@ -31,14 +34,52 @@ export class LogSleepinessPage {
   saving = false;
   error = '';
 
+  // When this check-in happened, as text like "2026-11-20T07:00" (for ion-datetime)
+  checkInTime: string = '';
+  // Latest time that can be picked (right now), so no future check-ins
+  maxTime: string = '';
+
   ionViewWillEnter() {
     this.selectedLevel = null;
     this.saving = false;
     this.error = '';
+    this.setCheckInTime();
     if (this.reminders.supported) {
       this.reminderStatus = '';
       void this.loadReminder();
     }
+  }
+
+    // Default time = now. If we came from Log Sleep, the link has ?at=<wake-up time>,
+  // so a sleep logged for an earlier day gets its check-in on that same morning.
+  setCheckInTime() {
+    var now = this.toLocalString(new Date());
+    this.maxTime = now;
+    this.checkInTime = now;
+
+    var at = this.route.snapshot.queryParamMap.get('at');
+    if (at != null) {
+      var atDate = new Date(at);
+      if (!isNaN(atDate.getTime()) && atDate.getTime() <= new Date().getTime()) {
+        this.checkInTime = this.toLocalString(atDate);
+      }
+    }
+  }
+
+  // Turn a Date into "YYYY-MM-DDTHH:mm" (local time) for ion-datetime
+  toLocalString(date: Date): string {
+    var month = this.twoDigits(date.getMonth() + 1);
+    var day = this.twoDigits(date.getDate());
+    var hours = this.twoDigits(date.getHours());
+    var minutes = this.twoDigits(date.getMinutes());
+    return date.getFullYear() + '-' + month + '-' + day + 'T' + hours + ':' + minutes;
+  }
+
+  twoDigits(n: number): string {
+    if (n < 10) {
+      return '0' + n;
+    }
+    return '' + n;
   }
 
   private async loadReminder() {
@@ -98,10 +139,16 @@ export class LogSleepinessPage {
       return;
     }
 
+    var loggedAt = new Date(this.checkInTime);
+    if (isNaN(loggedAt.getTime()) || loggedAt.getTime() > new Date().getTime()) {
+      this.error = 'Please pick a time that is not in the future.';
+      return;
+    }
+
     this.saving = true;
     this.error = '';
     try {
-      await this.sleepService.logSleepinessData(new StanfordSleepinessData(level));
+      await this.sleepService.logSleepinessData(new StanfordSleepinessData(level, loggedAt));
     } catch {
       this.error = 'Could not confirm the save. Check History before trying again.';
       this.saving = false;
