@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import {
-  IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonItem, IonLabel,
+  IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonItem,
   IonList, IonRadio, IonRadioGroup, IonTitle, IonToolbar, NavController
 } from '@ionic/angular/standalone';
 import { StanfordSleepinessData } from '../data/stanford-sleepiness-data';
@@ -12,7 +12,7 @@ import { SleepinessReminderService } from '../services/sleepiness-reminder.servi
   templateUrl: './log-sleepiness.page.html',
   styleUrls: ['./log-sleepiness.page.scss'],
   imports: [
-    IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonItem, IonLabel,
+    IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonItem,
     IonList, IonRadio, IonRadioGroup, IonTitle, IonToolbar
   ]
 })

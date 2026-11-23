@@ -1,10 +1,13 @@
 import { SleepData } from './sleep-data';
 
+export const sleepQualityOptions = ['Very poor', 'Poor', 'Fair', 'Good', 'Very good'] as const;
+export type SleepQuality = (typeof sleepQualityOptions)[number];
+
 export class OvernightSleepData extends SleepData {
 	public sleepStart:Date;
 	public sleepEnd:Date;
 
-	constructor(sleepStart:Date, sleepEnd:Date) {
+	constructor(sleepStart:Date, sleepEnd:Date, public quality?: SleepQuality) {
 		super();
 		this.sleepStart = sleepStart;
 		this.sleepEnd = sleepEnd;

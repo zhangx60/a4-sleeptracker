@@ -1,17 +1,44 @@
-main {
-  max-width: 42rem;
-  margin-inline: auto;
+.day-heading {
+  margin-block: 1.4rem 0.55rem;
+  color: var(--journal-muted);
+  font-size: 0.95rem;
+  font-weight: 600;
 }
 
-ion-list {
-  margin-top: 0.75rem;
+.entry-card {
+  margin-bottom: 0.65rem;
+  border: 1px solid var(--journal-border);
+  border-radius: 0.95rem;
 }
 
-ion-button {
-  min-height: 44px;
+.entry-card ion-item {
+  --inner-padding-end: 0.5rem;
+}
+
+.entry-card ion-label {
+  margin-block: 0.85rem;
+}
+
+.entry-card h3 {
+  margin-block: 0.3rem;
+  font-size: 1.04rem;
+  line-height: 1.4;
+  font-weight: 650;
+}
+
+.entry-card p {
+  color: var(--journal-muted);
+}
+
+.entry-card .entry-type,
+.quality strong {
+  color: var(--ion-color-primary);
+}
+
+.entry-card .quality {
+  margin-top: 0.45rem;
 }
 
 .empty-state {
-  padding-block: 1.5rem;
   text-align: center;
 }

@@ -3,7 +3,7 @@ import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonItem, IonItemOption,
-  IonItemOptions, IonItemSliding, IonLabel, IonList, IonSegment, IonSegmentButton,
+  IonItemOptions, IonItemSliding, IonLabel, IonList,
   IonTitle, IonToolbar, ToastController
 } from '@ionic/angular/standalone';
 import { OvernightSleepData } from '../data/overnight-sleep-data';
@@ -18,16 +18,16 @@ type Entry = OvernightSleepData | StanfordSleepinessData;
   styleUrls: ['./history.page.scss'],
   imports: [
     DatePipe, RouterLink, IonBackButton, IonButton, IonButtons, IonContent, IonHeader,
-    IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel, IonList, IonSegment,
-    IonSegmentButton, IonTitle, IonToolbar
+    IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel, IonList,
+    IonTitle, IonToolbar
   ]
 })
 export class HistoryPage {
   private readonly sleepService = inject(SleepService);
   private readonly toasts = inject(ToastController);
 
-  category: 'overnight' | 'sleepiness' = 'overnight';
   entries: Entry[] = [];
+  days: { date: Date; entries: Entry[] }[] = [];
   loading = true;
   error = '';
   saving = false;
@@ -44,13 +44,6 @@ export class HistoryPage {
       this.error = 'Could not load your history.';
     } finally {
       this.loading = false;
-    }
-  }
-
-  selectCategory(value: unknown) {
-    if (value === 'overnight' || value === 'sleepiness') {
-      this.category = value;
-      this.refresh();
     }
   }
 
@@ -117,9 +110,18 @@ export class HistoryPage {
   }
 
   private refresh() {
-    const source = this.category === 'overnight'
-      ? SleepService.AllOvernightData
-      : SleepService.AllSleepinessData;
-    this.entries = [...source].sort((a, b) => this.entryDate(b).getTime() - this.entryDate(a).getTime());
+    this.entries = [...SleepService.AllOvernightData, ...SleepService.AllSleepinessData]
+      .sort((a, b) => this.entryDate(b).getTime() - this.entryDate(a).getTime());
+
+    this.days = [];
+    for (const entry of this.entries) {
+      const date = this.entryDate(entry);
+      const lastDay = this.days[this.days.length - 1];
+      if (lastDay && lastDay.date.toDateString() === date.toDateString()) {
+        lastDay.entries.push(entry);
+      } else {
+        this.days.push({ date, entries: [entry] });
+      }
+    }
   }
 }

@@ -1,21 +1,21 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start"><ion-back-button defaultHref="/home"></ion-back-button></ion-buttons>
-    <ion-title>Log sleepiness</ion-title>
+    <ion-title>Log Sleepiness</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <main class="ion-padding">
+  <main class="journal-page">
     <h1 id="scale-heading">How alert do you feel?</h1>
     <p>Choose the Stanford Sleepiness Scale level that fits right now. The current time is saved automatically.</p>
     <ion-list>
       <ion-radio-group aria-labelledby="scale-heading" [value]="selectedLevel"
         (ionChange)="selectedLevel = $event.detail.value">
         @for (description of levels; track $index) {
-          <ion-item>
-            <ion-radio [value]="$index + 1" labelPlacement="end" class="ion-text-wrap">
-              <ion-label><strong>{{ $index + 1 }}</strong> · {{ description }}</ion-label>
+          <ion-item lines="none" class="choice-card" [class.selected]="selectedLevel === $index + 1">
+            <ion-radio [value]="$index + 1" labelPlacement="start" class="ion-text-wrap">
+              <span class="level"><strong>{{ $index + 1 }}</strong><span>{{ description }}</span></span>
             </ion-radio>
           </ion-item>
         }
@@ -23,10 +23,10 @@
     </ion-list>
     @if (error) { <p role="alert">{{ error }}</p> }
     <ion-button expand="block" [disabled]="selectedLevel === null || saving" (click)="save()">
-      Save sleepiness
+      Save Sleepiness
     </ion-button>
     @if (reminders.supported) {
-      <section class="reminder" aria-labelledby="reminder-heading">
+      <section class="journal-card reminder" aria-labelledby="reminder-heading">
         <h2 id="reminder-heading">Daily check-in reminder</h2>
         <p>Get a notification to log your sleepiness at a time you choose.</p>
         <label for="reminder-time">Reminder time</label>

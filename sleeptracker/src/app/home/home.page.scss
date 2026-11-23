@@ -1,15 +1,100 @@
-.big-button {
-  margin-top: 16px;
-  height: 48px;
-  font-size: 16px;
+.home {
+  max-width: 52rem;
 }
 
-.comment {
-  margin-top: 8px;
-  font-style: italic;
+.sky {
+  position: relative;
+  display: flex;
+  align-items: end;
+  min-height: 9rem;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  padding: 1.25rem;
+  border: 1px solid var(--journal-border);
+  border-radius: 1.25rem;
+  background:
+    radial-gradient(circle at 14% 22%, #d4e5fc 1px, transparent 2px),
+    radial-gradient(circle at 38% 30%, #7699bd 1px, transparent 2px),
+    radial-gradient(circle at 72% 17%, #c4def6 1px, transparent 2px),
+    radial-gradient(circle at 93% 48%, #d4e5fc 1px, transparent 2px),
+    radial-gradient(ellipse at 81% 34%, #3d6487, transparent 40%),
+    linear-gradient(140deg, #182339, #203650);
 }
 
-ion-badge {
-  min-width: 28px;
-  font-size: 15px;
+.sky h1 {
+  margin: 0;
+  font-size: clamp(1.85rem, 6vw, 2.75rem);
+}
+
+.sky ion-icon {
+  position: absolute;
+  top: 1.25rem;
+  right: 2.25rem;
+  color: #cce7ff;
+  font-size: 3.2rem;
+  transform: rotate(-17deg);
+}
+
+.overview {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.journal-card {
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(145deg, #263a53, var(--journal-card));
+}
+
+h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  font-size: 1rem;
+}
+
+h2 ion-icon,
+strong {
+  color: var(--ion-color-primary);
+}
+
+.total {
+  margin-block: 0.6rem 0;
+  color: var(--ion-text-color);
+  font-size: 1.55rem;
+  font-weight: 700;
+}
+
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+li {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: space-between;
+  padding-block: 0.55rem;
+  border-bottom: 1px solid var(--journal-border);
+}
+
+time {
+  white-space: nowrap;
+  color: var(--journal-muted);
+  font-size: 0.85rem;
+}
+
+.journal-card ion-button {
+  margin-top: auto;
+}
+
+.history-link {
+  margin-top: 0.75rem;
+}
+
+@media (min-width: 650px) {
+  .overview {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }

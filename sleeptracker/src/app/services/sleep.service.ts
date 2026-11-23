@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SleepData } from '../data/sleep-data';
-import { OvernightSleepData } from '../data/overnight-sleep-data';
+import { OvernightSleepData, sleepQualityOptions } from '../data/overnight-sleep-data';
 import { StanfordSleepinessData } from '../data/stanford-sleepiness-data';
 import { Preferences } from '@capacitor/preferences';
 
@@ -153,7 +153,8 @@ export class SleepService {
 			var savedOvernight:any[] = JSON.parse(overnightResult.value);
 			for (var i = 0; i < savedOvernight.length; i++) {
 				var item = savedOvernight[i];
-				var overnight = new OvernightSleepData(new Date(item.sleepStart), new Date(item.sleepEnd));
+				var quality = sleepQualityOptions.find(option => option === item.quality);
+				var overnight = new OvernightSleepData(new Date(item.sleepStart), new Date(item.sleepEnd), quality);
 				overnight.id = item.id;
 				overnight.loggedAt = new Date(item.loggedAt);
 				overnightList.push(overnight);

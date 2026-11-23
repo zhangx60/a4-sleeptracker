@@ -1,42 +1,26 @@
 import { Component } from '@angular/core';
-import {
-	IonHeader, IonToolbar, IonTitle, IonContent,
-	IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent,
-	IonList, IonItem, IonLabel, IonBadge, IonButton, IonIcon, IonNote
-} from '@ionic/angular/standalone';
+import { RouterLink } from '@angular/router';
+import { IonButton, IonContent, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { moon, cafe, list } from 'ionicons/icons';
-import { SleepService } from '../services/sleep.service';
-import { SleepData } from '../data/sleep-data';
+import { moon, sunnyOutline, timeOutline } from 'ionicons/icons';
 import { OvernightSleepData } from '../data/overnight-sleep-data';
 import { StanfordSleepinessData } from '../data/stanford-sleepiness-data';
-import { RouterLink } from '@angular/router';
+import { SleepService } from '../services/sleep.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
-    imports: [
-	IonHeader, IonToolbar, IonTitle, IonContent,
-	IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent,
-	IonList, IonItem, IonLabel, IonBadge, IonButton, IonIcon, IonNote,
-	RouterLink
-  ],
+  imports: [IonButton, IonContent, IonIcon, RouterLink],
 })
 export class HomePage {
   constructor(public sleepService:SleepService) {
-		addIcons({ moon, cafe, list });
+		addIcons({ moon, sunnyOutline, timeOutline });
 	}
 
 	async ngOnInit() {
 		// Load saved data from storage when the app opens
 		await this.sleepService.loadData();
-		console.log(this.allSleepData);
-	}
-
-	/* Ionic doesn't allow bindings to static variables, so this getter can be used instead. */
-	get allSleepData() {
-		return SleepService.AllSleepData;
 	}
 
 	// The most recent overnight log, or null if none
@@ -55,9 +39,9 @@ export class HomePage {
 	get lastNightLabel():string {
 		var latest = this.lastNight;
 		if (latest != null && latest.sleepEnd.toDateString() == new Date().toDateString()) {
-			return 'Last night';
+			return 'Last Night';
 		}
-		return 'Latest sleep';
+		return latest ? 'Latest Sleep' : 'Last Night';
 	}
 
 	// All sleepiness logs from today, newest first
@@ -74,25 +58,5 @@ export class HomePage {
 			return b.loggedAt.getTime() - a.loggedAt.getTime();
 		});
 		return result;
-	}
-	// Badge color: 1-2 green, 3-4 yellow, 5-7 red
-	sleepinessColor(value:number):string {
-		if (value <= 2) {
-			return 'success';
-		} else if (value <= 4) {
-			return 'warning';
-		} else {
-			return 'danger';
-		}
-	}
-	// Short comment under "Last night"
-	sleepComment(hours:number):string {
-		if (hours >= 7) {
-			return 'Nice, that\'s a full night.';
-		} else if (hours >= 5) {
-			return 'A bit short — try to get to bed earlier tonight.';
-		} else {
-			return 'Rough night. Take it easy today.';
-		}
 	}
 }

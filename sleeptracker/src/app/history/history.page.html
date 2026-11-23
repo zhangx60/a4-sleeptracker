@@ -6,50 +6,53 @@
 </ion-header>
 
 <ion-content>
-  <main class="ion-padding">
-    <ion-segment aria-label="Log category" [value]="category" (ionChange)="selectCategory($event.detail.value)">
-      <ion-segment-button value="overnight"><ion-label>Overnight</ion-label></ion-segment-button>
-      <ion-segment-button value="sleepiness"><ion-label>Sleepiness</ion-label></ion-segment-button>
-    </ion-segment>
-
+  <main class="journal-page">
     @if (saveError) { <p role="alert">{{ saveError }}</p> }
 
     @if (loading) {
       <p role="status">Loading history…</p>
     } @else if (error) {
       <p role="alert">{{ error }}</p>
-    } @else if (entries.length === 0) {
-      <section class="empty-state">
-        <h2>{{ category === 'overnight' ? 'No overnight entries yet' : 'No sleepiness entries yet' }}</h2>
-        <ion-button [routerLink]="category === 'overnight' ? '/log-sleep' : '/log-sleepiness'">
-          {{ category === 'overnight' ? 'Log overnight sleep' : 'Log sleepiness' }}
-        </ion-button>
+    } @else if (days.length === 0) {
+      <section class="journal-card empty-state">
+        <h1>No entries yet</h1>
+        <ion-button routerLink="/log-sleep">Log Sleep</ion-button>
+        <ion-button routerLink="/log-sleepiness" fill="outline">Log Sleepiness</ion-button>
       </section>
     } @else {
-      <ion-list>
-        @for (entry of entries; track entry.id) {
-          <ion-item-sliding #sliding>
-            <ion-item>
-              <ion-label class="ion-text-wrap">
-                <p>{{ entryDate(entry) | date:'EEE, MMM d, y' }}</p>
-                <h2>{{ entry.summaryString() }}</h2>
-                @if (overnight(entry); as sleep) {
-                  <p>Bedtime {{ sleep.sleepStart | date:'MMM d, h:mm a' }}</p>
-                  <p>Wake-up {{ sleep.sleepEnd | date:'MMM d, h:mm a' }}</p>
-                } @else {
-                  <p>{{ entry.loggedAt | date:'shortTime' }}</p>
-                }
-              </ion-label>
-              <ion-button slot="end" fill="clear" color="danger" [disabled]="saving" (click)="remove(entry, sliding)">
-                Delete
-              </ion-button>
-            </ion-item>
-            <ion-item-options side="end">
-              <ion-item-option color="danger" [disabled]="saving" (click)="remove(entry, sliding)">Delete</ion-item-option>
-            </ion-item-options>
-          </ion-item-sliding>
-        }
-      </ion-list>
+      @for (day of days; track day.date.toDateString()) {
+        <section>
+          <h2 class="day-heading">{{ day.date | date:'EEEE, MMM d, y' }}</h2>
+          <ion-list>
+            @for (entry of day.entries; track entry.id) {
+              <ion-item-sliding #sliding class="entry-card">
+                <ion-item lines="none">
+                  <ion-label class="ion-text-wrap">
+                    @if (overnight(entry); as sleep) {
+                      <p class="entry-type">Overnight Sleep</p>
+                      <h3>{{ sleep.summaryString() }}</h3>
+                      <p>Bedtime {{ sleep.sleepStart | date:'MMM d, h:mm a' }}</p>
+                      <p>Wake-up {{ sleep.sleepEnd | date:'MMM d, h:mm a' }}</p>
+                      @if (sleep.quality) {
+                        <p class="quality">Sleep quality <strong>{{ sleep.quality }}</strong></p>
+                      }
+                    } @else {
+                      <p class="entry-type">Daytime Sleepiness · {{ entry.loggedAt | date:'shortTime' }}</p>
+                      <h3>{{ entry.summaryString() }}</h3>
+                    }
+                  </ion-label>
+                  <ion-button slot="end" fill="clear" color="danger" [disabled]="saving"
+                    (click)="remove(entry, sliding)">Delete</ion-button>
+                </ion-item>
+                <ion-item-options side="end">
+                  <ion-item-option color="danger" [disabled]="saving"
+                    (click)="remove(entry, sliding)">Delete</ion-item-option>
+                </ion-item-options>
+              </ion-item-sliding>
+            }
+          </ion-list>
+        </section>
+      }
     }
   </main>
 </ion-content>

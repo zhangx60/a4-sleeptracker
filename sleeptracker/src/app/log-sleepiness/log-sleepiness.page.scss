@@ -1,36 +1,39 @@
-main {
-  max-width: 42rem;
-  margin-inline: auto;
+.level {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-right: 0.55rem;
+  line-height: 1.4;
 }
 
-ion-item {
-  --min-height: 56px;
+.level strong {
+  display: grid;
+  flex: 0 0 1.8rem;
+  min-height: 1.8rem;
+  place-items: center;
+  border-radius: 0.45rem;
+  background: #304861;
+  color: var(--ion-color-primary);
 }
 
-ion-radio {
-  width: 100%;
-  padding-block: 0.65rem;
-}
-
-ion-button {
-  margin-block: 1rem;
-  min-height: 44px;
-}
-
+main > ion-button,
 .reminder {
-  border-top: 1px solid var(--ion-color-step-200, #ccc);
-  margin-top: 2rem;
-  padding-top: 0.75rem;
+  margin-top: 1rem;
+}
+
+.reminder h2 {
+  margin-top: 0;
+  font-size: 1.15rem;
 }
 
 input[type='time'] {
   display: block;
   min-height: 44px;
-  margin-top: 0.5rem;
+  margin-block: 0.5rem;
   padding-inline: 0.75rem;
   font: inherit;
   color: var(--ion-text-color);
   background: var(--ion-background-color);
-  border: 1px solid var(--ion-color-medium);
+  border: 1px solid var(--journal-border);
   border-radius: 0.5rem;
 }

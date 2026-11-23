@@ -25,29 +25,59 @@
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
+@import '@ionic/angular/css/palettes/dark.always.css';
 
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
-
-
-
-/* Rounder cards with a faint border instead of a shadow */
-ion-card {
-  border-radius: 16px;
-  border: 1px solid rgba(var(--ion-text-color-rgb, 0, 0, 0), 0.08);
-  box-shadow: none;
+.journal-page {
+  max-width: 42rem;
+  margin-inline: auto;
+  padding: 1.25rem 1rem 2rem;
 }
 
-/* Friendlier buttons: rounded, no ALL CAPS */
+.journal-page h1 {
+  margin-top: 0;
+  font-size: clamp(1.65rem, 5vw, 2.2rem);
+  font-weight: 700;
+}
+
+.journal-page > p,
+.journal-card p {
+  line-height: 1.5;
+  color: var(--journal-muted);
+}
+
+.journal-card {
+  padding: 1.1rem;
+  border: 1px solid var(--journal-border);
+  border-radius: 1.125rem;
+  background: var(--journal-card);
+}
+
+.journal-page ion-list {
+  background: transparent;
+  padding: 0;
+}
+
+.choice-card {
+  margin-block: 0.4rem;
+  border: 1px solid var(--journal-border);
+  border-radius: 0.875rem;
+  --min-height: 48px;
+}
+
+.choice-card.selected {
+  border-color: var(--ion-color-primary);
+  --background: #253e57;
+}
+
+.choice-card ion-radio {
+  width: 100%;
+  padding-block: 0.55rem;
+  white-space: normal;
+}
+
 ion-button {
-  --border-radius: 12px;
+  min-height: 44px;
+  --border-radius: 0.875rem;
   text-transform: none;
   font-weight: 600;
 }

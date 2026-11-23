@@ -1,60 +1,67 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home"></ion-back-button>
+      @if (choosingQuality) {
+        <ion-button [disabled]="isSaving" (click)="choosingQuality = false">Back</ion-button>
+      } @else {
+        <ion-back-button defaultHref="/home"></ion-back-button>
+      }
     </ion-buttons>
     <ion-title>Log Sleep</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Log Sleep</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <main class="journal-page">
+    <ion-modal [keepContentsMounted]="true">
+      <ng-template>
+        <ion-datetime id="bedtime" presentation="date-time" [(ngModel)]="bedtime"
+          [max]="maxTime" [showDefaultButtons]="true"></ion-datetime>
+      </ng-template>
+    </ion-modal>
+    <ion-modal [keepContentsMounted]="true">
+      <ng-template>
+        <ion-datetime id="waketime" presentation="date-time" [(ngModel)]="wakeTime"
+          [max]="maxTime" [showDefaultButtons]="true"></ion-datetime>
+      </ng-template>
+    </ion-modal>
 
-  <p class="hint ion-padding-horizontal">When did you go to bed and wake up?</p>
+    @if (!choosingQuality) {
+      <h1>When did you sleep?</h1>
+      <ion-list class="time-list">
+        <ion-item lines="none">
+          <ion-label>Bedtime</ion-label>
+          <ion-datetime-button datetime="bedtime" slot="end"></ion-datetime-button>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-label>Wake-up Time</ion-label>
+          <ion-datetime-button datetime="waketime" slot="end"></ion-datetime-button>
+        </ion-item>
+      </ion-list>
 
-  <ion-list inset="true">
-    <!-- Bedtime -->
-    <ion-item>
-      <ion-label>Bedtime</ion-label>
-      <ion-datetime-button datetime="bedtime" slot="end"></ion-datetime-button>
-    </ion-item>
-
-    <!-- Wake-up time -->
-    <ion-item>
-      <ion-label>Wake up</ion-label>
-      <ion-datetime-button datetime="waketime" slot="end"></ion-datetime-button>
-    </ion-item>
-  </ion-list>
-
-  <!-- The pop-up pickers that the two buttons above open -->
-  <ion-modal [keepContentsMounted]="true">
-    <ng-template>
-      <ion-datetime id="bedtime" presentation="date-time" [(ngModel)]="bedtime" [max]="maxTime"></ion-datetime>
-    </ng-template>
-  </ion-modal>
-  <ion-modal [keepContentsMounted]="true">
-    <ng-template>
-      <ion-datetime id="waketime" presentation="date-time" [(ngModel)]="wakeTime" [max]="maxTime"></ion-datetime>
-    </ng-template>
-  </ion-modal>
-
-  <!-- Live preview / error message -->
-  <div class="ion-padding-horizontal">
-    @if (errorMessage == '') {
-      <p class="duration">You slept <strong>{{ durationText }}</strong></p>
+      @if (errorMessage) {
+        <p role="alert"><ion-note color="danger">{{ errorMessage }}</ion-note></p>
+      } @else {
+        <p class="duration"><span>Sleep duration</span><strong>{{ durationText }}</strong></p>
+      }
+      <ion-button expand="block" [disabled]="!!errorMessage" (click)="choosingQuality = true">
+        Continue
+      </ion-button>
     } @else {
-      <ion-note color="danger" class="error">{{ errorMessage }}</ion-note>
+      <h1 id="quality-title">How did you feel when you woke up?</h1>
+      <p class="duration"><span>Sleep duration</span><strong>{{ durationText }}</strong></p>
+      <ion-list>
+        <ion-radio-group aria-labelledby="quality-title" [(ngModel)]="quality">
+          @for (option of qualityOptions; track option) {
+            <ion-item lines="none" class="choice-card" [class.selected]="quality === option">
+              <ion-radio [value]="option" [disabled]="isSaving">{{ option }}</ion-radio>
+            </ion-item>
+          }
+        </ion-radio-group>
+      </ion-list>
+      <ion-button expand="block" [disabled]="quality === null || isSaving" (click)="saveSleep()">
+        {{ isSaving ? 'Saving…' : 'Save Sleep' }}
+      </ion-button>
     }
-  </div>
-
-  <div class="ion-padding">
-      <ion-button expand="block" class="big-button" [disabled]="errorMessage != '' || isSaving" (click)="saveSleep()">
-      <ion-icon slot="start" name="checkmark"></ion-icon>
-      Save
-    </ion-button>
-  </div>
+  </main>
 </ion-content>

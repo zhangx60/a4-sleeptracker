@@ -1,18 +1,27 @@
-.hint {
-  color: var(--ion-color-medium);
+.time-list ion-item {
+  margin-bottom: 0.6rem;
+  border: 1px solid var(--journal-border);
+  border-radius: 0.875rem;
+  --min-height: 62px;
+  --padding-start: 0.75rem;
+  --inner-padding-end: 0.5rem;
+}
+
+.time-list ion-datetime-button {
+  margin-inline-start: 0.35rem;
 }
 
 .duration {
-  font-size: 18px;
+  display: grid;
+  gap: 0.25rem;
+  margin-block: 1rem;
 }
 
-.error {
-  display: block;
-  margin-top: 12px;
-  font-size: 16px;
+.duration strong {
+  color: var(--ion-color-primary);
+  font-size: 1.25rem;
 }
 
-.big-button {
-  height: 48px;
-  font-size: 16px;
+main > ion-button {
+  margin-top: 1rem;
 }

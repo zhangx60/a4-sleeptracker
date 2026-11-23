@@ -50,26 +50,23 @@ and adaptable for a quick break between classes.
 
 
 7. Did you design your app specifically for iOS or Android, or both?
-We designed mainly for iOS, using iOS-style large titles and back buttons, 
-and the colors follow the phone's Light/Dark Mode setting as Apple's design guidelines recommend.
-Because it is built with Ionic, it also runs on Android.
+
+We prioritized the mobile layout and used Ionic back buttons and date pickers for familiar controls. The app uses the same night theme in both browser and native builds.
 
 
 8. How can a person log overnight sleep in your app? Why did you choose to support logging overnight sleep in this way?
-On the home screen, tap "Log last night's sleep"; bedtime and wake-up time are pre-filled with 11 PM and 7 AM,
-so on a typical day logging is just one tap on Save.
-We show how long you slept while you edit and block impossible entries (wake-up before bedtime, 
-future times, more than 16 hours, or a double-tap that would save twice) so mistakes are not saved.
+
+Tap Log Sleep, check your bedtime and wake-up time, then tap Continue to rate how you felt on waking and save the entry. The duration preview and time checks help catch mistakes before saving.
 
 
 9. How can a person log sleepiness during the day in your app? Why did you choose to support logging sleepiness in this way?
 
-On the Log sleepiness page, pick one of the seven Stanford Sleepiness Scale levels and tap Save sleepiness. The app records the current time automatically so it is quick to check in several times a day.
+On the Log Sleepiness page, pick one of the seven Stanford Sleepiness Scale levels and tap Save Sleepiness. The app records the current time automatically so it is quick to check in several times a day.
 
 
 10. How can a person view the data they logged in your app? Why did you choose to support viewing logged data in this way?
 
-Open History and use the Overnight and Sleepiness tabs to see each type of entry, newest first. We split them into two tabs because bedtime and wake-up are easier to compare when they are grouped together, and daytime check-ins can happen several times a day.
+Open History to see overnight sleep and daytime check-ins in one timeline grouped by date. Each overnight card puts the duration and sleep quality together so you can see how you felt alongside how long you slept.
 
 
 11. Which feature choose--using a native device resource, backing up logged data, or both?
@@ -88,7 +85,5 @@ and every add or delete is written to storage before the screen updates.
 Saved logs are loaded when the app opens, so they stay after closing or refreshing the app.
 
 14. How does your app implement or follow principles of good mobile design?
-The home screen is a useful initial view (latest sleep, today's check-ins, and one-tap buttons for both logs),
-and Undo after deleting plus a back button on every page give users an easy "uh-oh" way out. 
-We prevent errors with pre-filled time pickers, blocking impossible times, 
-and keeping Save disabled until the input is valid or while saving, we aslo follow iOS conventions such as large titles, back buttons, segmented tabs, and matching the system Light/Dark Mode.
+
+The home screen shows the latest sleep, today's check-ins, and buttons for both logging tasks, while time validation and disabled Save buttons help prevent mistakes. Ionic back buttons and date pickers keep navigation familiar, and Undo gives users a way to recover a deleted entry.

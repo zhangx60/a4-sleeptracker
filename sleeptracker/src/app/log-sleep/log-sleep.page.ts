@@ -1,16 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
 	IonContent, IonHeader, IonTitle, IonToolbar,
 	IonButtons, IonBackButton, IonList, IonItem, IonLabel,
-	IonDatetime, IonDatetimeButton, IonModal, IonButton, IonIcon, IonNote,
+	IonDatetime, IonDatetimeButton, IonModal, IonButton, IonNote, IonRadio, IonRadioGroup,
 	ToastController, NavController
 } from '@ionic/angular/standalone';
-import { addIcons } from 'ionicons';
-import { checkmark } from 'ionicons/icons';
 import { SleepService } from '../services/sleep.service';
-import { OvernightSleepData } from '../data/overnight-sleep-data';
+import { OvernightSleepData, SleepQuality, sleepQualityOptions } from '../data/overnight-sleep-data';
 
 @Component({
   selector: 'app-log-sleep',
@@ -20,31 +17,31 @@ import { OvernightSleepData } from '../data/overnight-sleep-data';
   imports: [
 	IonContent, IonHeader, IonTitle, IonToolbar,
 	IonButtons, IonBackButton, IonList, IonItem, IonLabel,
-	IonDatetime, IonDatetimeButton, IonModal, IonButton, IonIcon, IonNote,
-	CommonModule, FormsModule
+	IonDatetime, IonDatetimeButton, IonModal, IonButton, IonNote, IonRadio, IonRadioGroup,
+	FormsModule
   ]
 })
-export class LogSleepPage implements OnInit {
+export class LogSleepPage {
 	// ion-datetime works with text like "2026-11-20T23:00"
 	bedtime:string = '';
 	wakeTime:string = '';
 	// Latest time someone can pick (right now) so they can't log the future
 	maxTime:string = '';
 	isSaving:boolean = false;
+  choosingQuality = false;
+  quality: SleepQuality | null = null;
+  readonly qualityOptions = sleepQualityOptions;
 
   constructor(public sleepService:SleepService,
 			  public toastController:ToastController,
-			  public navController:NavController) {
-		addIcons({ checkmark });
-	}
-
-  ngOnInit() {
-  }
+			  public navController:NavController) {}
 
 	// Runs every time this page opens, so the form starts fresh each time
 	ionViewWillEnter() {
 		this.isSaving = false;
 		this.setDefaultTimes();
+    this.choosingQuality = false;
+    this.quality = null;
 	}
 
 	// Default: went to bed yesterday 11:00 PM, woke up today 7:00 AM
@@ -104,9 +101,12 @@ export class LogSleepPage implements OnInit {
 		if (this.bedtime == '' || this.wakeTime == '') {
 			return 'Please pick both times.';
 		}
-		if (this.minutesSlept <= 0) {
+		if (!Number.isFinite(this.minutesSlept) || this.minutesSlept <= 0) {
 			return 'Wake-up time needs to be after bedtime.';
 		}
+		if (new Date(this.wakeTime).getTime() > Date.now()) {
+      return 'Wake-up time cannot be in the future.';
+    }
 		if (this.minutesSlept > 16 * 60) {
 			return 'That\'s more than 16 hours — double-check the dates.';
 		}
@@ -114,11 +114,11 @@ export class LogSleepPage implements OnInit {
 	}
 
 	async saveSleep() {
-		if (this.errorMessage != '' || this.isSaving) {
+		if (this.errorMessage || this.isSaving || !this.quality) {
 			return;
 		}
 		this.isSaving = true;
-		var sleepData = new OvernightSleepData(new Date(this.bedtime), new Date(this.wakeTime));
+		var sleepData = new OvernightSleepData(new Date(this.bedtime), new Date(this.wakeTime), this.quality);
 
 		try {
 			await this.sleepService.logOvernightData(sleepData); // wait until it's really saved
