@@ -49,42 +49,75 @@ export class SleepService {
 
 	public async logOvernightData(sleepData:OvernightSleepData) {
 		await this.loadData(); // wait until saved data is loaded, so we don't overwrite it
-		SleepService.AllSleepData.push(sleepData);
-		SleepService.AllOvernightData.push(sleepData);
-		await this.saveData();
+		var oldList = SleepService.AllOvernightData;
+		// Make a new list = old list + the new record
+		var newList:OvernightSleepData[] = [];
+		for (var i = 0; i < oldList.length; i++) {
+			newList.push(oldList[i]);
+		}
+		newList.push(sleepData);
+		await this.saveOvernightList(newList, oldList);
 	}
 
 	public async logSleepinessData(sleepData:StanfordSleepinessData) {
 		await this.loadData(); // wait until saved data is loaded, so we don't overwrite it
-		SleepService.AllSleepData.push(sleepData);
-		SleepService.AllSleepinessData.push(sleepData);
-		await this.saveData();
+		var oldList = SleepService.AllSleepinessData;
+		var newList:StanfordSleepinessData[] = [];
+		for (var i = 0; i < oldList.length; i++) {
+			newList.push(oldList[i]);
+		}
+		newList.push(sleepData);
+		await this.saveSleepinessList(newList, oldList);
 	}
 
 	// Delete Data
 	public async deleteOvernightData(id:string) {
 		await this.loadData();
+		var oldList = SleepService.AllOvernightData;
+		// Make a new list without the record that has this id
 		var newList:OvernightSleepData[] = [];
-		for (var i = 0; i < SleepService.AllOvernightData.length; i++) {
-			if (SleepService.AllOvernightData[i].id != id) {
-				newList.push(SleepService.AllOvernightData[i]);
+		for (var i = 0; i < oldList.length; i++) {
+			if (oldList[i].id != id) {
+				newList.push(oldList[i]);
 			}
 		}
-		SleepService.AllOvernightData = newList;
-		this.rebuildAllSleepData();
-		await this.saveData();
+		await this.saveOvernightList(newList, oldList);
 	}
 	public async deleteSleepinessData(id:string) {
 		await this.loadData();
+		var oldList = SleepService.AllSleepinessData;
 		var newList:StanfordSleepinessData[] = [];
-		for (var i = 0; i < SleepService.AllSleepinessData.length; i++) {
-			if (SleepService.AllSleepinessData[i].id != id) {
-				newList.push(SleepService.AllSleepinessData[i]);
+		for (var i = 0; i < oldList.length; i++) {
+			if (oldList[i].id != id) {
+				newList.push(oldList[i]);
 			}
 		}
+		await this.saveSleepinessList(newList, oldList);
+	}
+
+	// Use the new list and save it. If saving fails, put the old list back
+	// so the screen matches what is really stored, then pass the error to the page.
+	private async saveOvernightList(newList:OvernightSleepData[], oldList:OvernightSleepData[]) {
+		SleepService.AllOvernightData = newList;
+		this.rebuildAllSleepData();
+		try {
+			await this.saveData();
+		} catch (error) {
+			SleepService.AllOvernightData = oldList;
+			this.rebuildAllSleepData();
+			throw error;
+		}
+	}
+	private async saveSleepinessList(newList:StanfordSleepinessData[], oldList:StanfordSleepinessData[]) {
 		SleepService.AllSleepinessData = newList;
 		this.rebuildAllSleepData();
-		await this.saveData();
+		try {
+			await this.saveData();
+		} catch (error) {
+			SleepService.AllSleepinessData = oldList;
+			this.rebuildAllSleepData();
+			throw error;
+		}
 	}
 	// AllSleepData = the two lists put together
 	private rebuildAllSleepData() {
@@ -116,6 +149,10 @@ export class SleepService {
 	public loadData():Promise<void> {
 		if (SleepService.LoadingPromise == null) {
 			SleepService.LoadingPromise = this.readFromStorage();
+			// If reading fails, forget this attempt so the next call can try again
+			SleepService.LoadingPromise.catch(function() {
+				SleepService.LoadingPromise = null;
+			});
 		}
 		return SleepService.LoadingPromise;
 	}
