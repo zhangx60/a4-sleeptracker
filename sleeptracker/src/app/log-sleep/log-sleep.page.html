@@ -15,13 +15,13 @@
   <main class="journal-page">
     <ion-modal [keepContentsMounted]="true">
       <ng-template>
-        <ion-datetime id="bedtime" presentation="date-time" [(ngModel)]="bedtime"
+        <ion-datetime id="bedtime" presentation="date-time" locale="en-US" [(ngModel)]="bedtime"
           [max]="maxTime" [showDefaultButtons]="true"></ion-datetime>
       </ng-template>
     </ion-modal>
     <ion-modal [keepContentsMounted]="true">
       <ng-template>
-        <ion-datetime id="waketime" presentation="date-time" [(ngModel)]="wakeTime"
+        <ion-datetime id="waketime" presentation="date-time" locale="en-US" [(ngModel)]="wakeTime"
           [max]="maxTime" [showDefaultButtons]="true"></ion-datetime>
       </ng-template>
     </ion-modal>
