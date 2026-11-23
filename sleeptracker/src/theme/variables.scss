@@ -1,2 +1,73 @@
 // For information on how to create your own theme, please see:
 // http://ionicframework.com/docs/theming/
+
+// "Night sky" theme for Sleep Tracker.
+// Follows the phone's Light/Dark setting (Apple's guidelines recommend this).
+// Violet = night / overnight sleep, amber = day / daytime sleepiness.
+
+/* ---------- Light mode ---------- */
+:root {
+  // Primary: violet (moon / overnight sleep)
+  --ion-color-primary: #5b4fd8;
+  --ion-color-primary-rgb: 91, 79, 216;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #5046be;
+  --ion-color-primary-tint: #6b61dc;
+
+  // Secondary: warm amber (sun / daytime sleepiness)
+  --ion-color-secondary: #f5b942;
+  --ion-color-secondary-rgb: 245, 185, 66;
+  --ion-color-secondary-contrast: #0f1226;
+  --ion-color-secondary-contrast-rgb: 15, 18, 38;
+  --ion-color-secondary-shade: #d8a33a;
+  --ion-color-secondary-tint: #f6c055;
+
+  // Soft lavender background, white cards
+  --ion-background-color: #f5f4fb;
+  --ion-background-color-rgb: 245, 244, 251;
+  --ion-toolbar-background: #f5f4fb;
+  --ion-item-background: #ffffff;
+  --ion-card-background: #ffffff;
+}
+
+/* ---------- Dark mode (when the phone is in Dark Mode) ---------- */
+@media (prefers-color-scheme: dark) {
+  :root {
+    // Lighter violet so it shows up on the dark background
+    --ion-color-primary: #7b6ff2;
+    --ion-color-primary-rgb: 123, 111, 242;
+    --ion-color-primary-contrast: #0f1226;
+    --ion-color-primary-contrast-rgb: 15, 18, 38;
+    --ion-color-primary-shade: #6c62d5;
+    --ion-color-primary-tint: #887df3;
+
+    --ion-color-secondary: #f5b942;
+    --ion-color-secondary-rgb: 245, 185, 66;
+    --ion-color-secondary-contrast: #0f1226;
+    --ion-color-secondary-contrast-rgb: 15, 18, 38;
+    --ion-color-secondary-shade: #d8a33a;
+    --ion-color-secondary-tint: #f6c055;
+
+    --ion-color-medium: #9a9cc0;
+    --ion-color-medium-rgb: 154, 156, 192;
+    --ion-color-medium-contrast: #0f1226;
+    --ion-color-medium-contrast-rgb: 15, 18, 38;
+    --ion-color-medium-shade: #8789a9;
+    --ion-color-medium-tint: #a4a6c6;
+
+    --ion-text-color: #e8e8f5;
+    --ion-text-color-rgb: 232, 232, 245;
+  }
+
+  // Deep navy "night sky" backgrounds
+  // (same selectors as Ionic's dark palette so these win)
+  :root.ios,
+  :root.md {
+    --ion-background-color: #0f1226;
+    --ion-background-color-rgb: 15, 18, 38;
+    --ion-toolbar-background: #141833;
+    --ion-item-background: #1a1e3a;
+    --ion-card-background: #1a1e3a;
+  }
+}

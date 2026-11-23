@@ -35,3 +35,19 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+
+
+/* Rounder cards with a faint border instead of a shadow */
+ion-card {
+  border-radius: 16px;
+  border: 1px solid rgba(var(--ion-text-color-rgb, 0, 0, 0), 0.08);
+  box-shadow: none;
+}
+
+/* Friendlier buttons: rounded, no ALL CAPS */
+ion-button {
+  --border-radius: 12px;
+  text-transform: none;
+  font-weight: 600;
+}
