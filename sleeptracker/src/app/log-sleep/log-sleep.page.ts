@@ -134,5 +134,16 @@ export class LogSleepPage implements OnInit {
 			await errorToast.present();
 			return;
 		}
-}
+
+		var toast = await this.toastController.create({
+			message: 'Sleep saved: ' + this.durationText,
+			duration: 2000,
+			position: 'top',
+			color: 'success'
+		});
+		await toast.present();
+
+		// Go back to the home page
+		this.navController.navigateBack('/home');
+	}
 }

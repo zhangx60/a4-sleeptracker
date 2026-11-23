@@ -56,7 +56,7 @@ export class SleepService {
 			newList.push(oldList[i]);
 		}
 		newList.push(sleepData);
-		await this.saveOvernightList(newList, oldList);
+		await this.saveOvernightList(newList);
 	}
 
 	public async logSleepinessData(sleepData:StanfordSleepinessData) {
@@ -67,7 +67,7 @@ export class SleepService {
 			newList.push(oldList[i]);
 		}
 		newList.push(sleepData);
-		await this.saveSleepinessList(newList, oldList);
+		await this.saveSleepinessList(newList);
 	}
 
 	// Delete Data
@@ -81,7 +81,7 @@ export class SleepService {
 				newList.push(oldList[i]);
 			}
 		}
-		await this.saveOvernightList(newList, oldList);
+		await this.saveOvernightList(newList);
 	}
 	public async deleteSleepinessData(id:string) {
 		await this.loadData();
@@ -92,33 +92,31 @@ export class SleepService {
 				newList.push(oldList[i]);
 			}
 		}
-		await this.saveSleepinessList(newList, oldList);
+		await this.saveSleepinessList(newList);
 	}
 
-	// Use the new list and save it. If saving fails, put the old list back
-	// so the screen matches what is really stored, then pass the error to the page.
-	private async saveOvernightList(newList:OvernightSleepData[], oldList:OvernightSleepData[]) {
+	// Save ONLY the overnight list to storage first.
+	// Memory (what the pages show) is updated only after saving worked,
+	// so if saving fails nothing changes and the page can show an error.
+	private async saveOvernightList(newList:OvernightSleepData[]) {
+		await Preferences.set({
+			key: SleepService.OvernightKey,
+			value: JSON.stringify(newList)
+		});
 		SleepService.AllOvernightData = newList;
 		this.rebuildAllSleepData();
-		try {
-			await this.saveData();
-		} catch (error) {
-			SleepService.AllOvernightData = oldList;
-			this.rebuildAllSleepData();
-			throw error;
-		}
 	}
-	private async saveSleepinessList(newList:StanfordSleepinessData[], oldList:StanfordSleepinessData[]) {
+
+	// Same thing for the sleepiness list (only touches the sleepiness key)
+	private async saveSleepinessList(newList:StanfordSleepinessData[]) {
+		await Preferences.set({
+			key: SleepService.SleepinessKey,
+			value: JSON.stringify(newList)
+		});
 		SleepService.AllSleepinessData = newList;
 		this.rebuildAllSleepData();
-		try {
-			await this.saveData();
-		} catch (error) {
-			SleepService.AllSleepinessData = oldList;
-			this.rebuildAllSleepData();
-			throw error;
-		}
 	}
+
 	// AllSleepData = the two lists put together
 	private rebuildAllSleepData() {
 		var combined:SleepData[] = [];
@@ -129,19 +127,6 @@ export class SleepService {
 			combined.push(SleepService.AllSleepinessData[j]);
 		}
 		SleepService.AllSleepData = combined;
-	}
-
-	// storage data func
-	// Preferences can only store strings, so turn the arrays into JSON text
-	private async saveData() {
-		await Preferences.set({
-			key: SleepService.OvernightKey,
-			value: JSON.stringify(SleepService.AllOvernightData)
-		});
-		await Preferences.set({
-			key: SleepService.SleepinessKey,
-			value: JSON.stringify(SleepService.AllSleepinessData)
-		});
 	}
 
 	// Safe to call many times: it only reads storage the first time,
