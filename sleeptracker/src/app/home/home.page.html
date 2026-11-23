@@ -35,10 +35,30 @@
             <div class="goal-bar">
               <div class="goal-fill" [class.full]="goalPercent(sleep) == 100" [style.width.%]="goalPercent(sleep)"></div>
             </div>
-            <span>{{ goalPercent(sleep) }}% of {{ goalHours }}h goal</span>
+            <span>{{ goalPercent(sleep) }}% of your sleep goal</span>
           </div>
         } @else {
           <p>No sleep logged yet.</p>
+        }
+        <div class="goal-settings">
+          <span>Sleep goal <strong>{{ goalHours }} h</strong></span>
+          @if (!editingGoal) {
+            <ion-button size="small" fill="clear" [disabled]="!goalReady" (click)="editGoal()">Edit goal</ion-button>
+          }
+        </div>
+        @if (editingGoal) {
+          <form class="goal-form" (submit)="$event.preventDefault(); saveGoal(goalInput.valueAsNumber)">
+            <label>Hours per night
+              <input #goalInput type="number" inputmode="decimal" min="1" max="24" step="0.25" required
+                [value]="goalHours" [disabled]="savingGoal">
+            </label>
+            <ion-button type="submit" size="small" [disabled]="savingGoal">Save</ion-button>
+            <ion-button type="button" size="small" fill="clear" [disabled]="savingGoal"
+              (click)="editingGoal = false; goalError = ''">Cancel</ion-button>
+          </form>
+        }
+        @if (goalError) {
+          <p role="alert">{{ goalError }}</p>
         }
         <ion-button expand="block" routerLink="/log-sleep">Log Sleep</ion-button>
       </section>
@@ -55,13 +75,13 @@
       @if (nightsThisWeek > 0) {
         <div class="chart">
           <div class="bars">
-            <div class="goal-line"><span>{{ goalHours }}h</span></div>
+            <div class="goal-line" [style.bottom.%]="goalHours / chartMaxHours * 100"><span>{{ goalHours }}h</span></div>
             @for (bar of weekBars; track bar.label) {
               <div class="bar-col">
                 @if (bar.hours > 0) {
                   <span class="bar-value">{{ shortHours(bar.hours) }}</span>
                 }
-                <div class="bar" [class.short]="bar.hours > 0 && bar.hours < 7" [class.empty]="bar.hours == 0"
+                <div class="bar" [class.short]="bar.hours > 0 && bar.hours < goalHours" [class.empty]="bar.hours == 0"
                   [style.height.%]="bar.hours > 0 ? bar.height : 4"></div>
               </div>
             }

@@ -20,25 +20,37 @@
         <ion-button routerLink="/log-sleepiness" fill="outline">Log Sleepiness</ion-button>
       </section>
     } @else {
+      <p class="history-hint">Swipe left on an entry to delete it.</p>
       @for (day of days; track day.date.toDateString()) {
-        <section>
-          <h2 class="day-heading">{{ day.date | date:'EEEE, MMM d, y' }}</h2>
+        <section class="day-group">
+          <h2 class="day-heading">
+            <time [attr.datetime]="day.date | date:'yyyy-MM-dd'">
+              {{ day.date | date:'EEE, MMM d' }} <span>{{ day.date | date:'y' }}</span>
+            </time>
+          </h2>
           <ion-list>
             @for (entry of day.entries; track entry.id) {
               <ion-item-sliding #sliding class="entry-card">
                 <ion-item lines="none">
                   <ion-label class="ion-text-wrap">
+                    @let rating = sleepiness(entry);
                     @if (overnight(entry); as sleep) {
-                      <p class="entry-type">Overnight Sleep</p>
+                      <p class="entry-type"><ion-icon name="moon-outline" aria-hidden="true"></ion-icon>Overnight Sleep</p>
                       <h3>{{ sleep.summaryString() }}</h3>
-                      <p>Bedtime {{ sleep.sleepStart | date:'MMM d, h:mm a' }}</p>
-                      <p>Wake-up {{ sleep.sleepEnd | date:'MMM d, h:mm a' }}</p>
-                      @if (sleep.quality) {
-                        <p class="quality">Sleep quality <strong>{{ sleep.quality }}</strong></p>
-                      }
-                    } @else {
-                      <p class="entry-type">Daytime Sleepiness · {{ entry.loggedAt | date:'shortTime' }}</p>
-                      <h3>{{ entry.summaryString() }}</h3>
+                      <dl class="sleep-details">
+                        <div><dt>Bedtime</dt><dd>{{ sleep.sleepStart | date:'MMM d, h:mm a' }}</dd></div>
+                        <div><dt>Wake-up</dt><dd>{{ sleep.sleepEnd | date:'MMM d, h:mm a' }}</dd></div>
+                        @if (sleep.quality) {
+                          <div><dt>Sleep quality</dt><dd>{{ sleep.quality }}</dd></div>
+                        }
+                      </dl>
+                    } @else if (rating) {
+                      <div class="entry-header">
+                        <p class="entry-type"><ion-icon name="sunny-outline" aria-hidden="true"></ion-icon>Daytime Sleepiness</p>
+                        <time>{{ rating.loggedAt | date:'shortTime' }}</time>
+                      </div>
+                      <h3>{{ rating.loggedValue }} <span class="score-scale">/ 7</span></h3>
+                      <p class="rating-description">{{ sleepinessDescription(rating.loggedValue) }}</p>
                     }
                   </ion-label>
                 </ion-item>

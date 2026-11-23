@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Preferences } from '@capacitor/preferences';
 import { RouterLink } from '@angular/router';
 import { IonButton, IonContent, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
@@ -10,7 +11,7 @@ import { SleepService } from '../services/sleep.service';
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
+  styleUrls: ['home.page.scss', 'flip-clock.scss'],
   imports: [IonButton, IonContent, IonIcon, RouterLink],
 })
 export class HomePage {
@@ -19,6 +20,15 @@ export class HomePage {
 	// Current time for the flip clock (updated every second while this page is open)
 	now:Date = new Date();
 	private clockTimer:any = null;
+	editingGoal = false;
+	savingGoal = false;
+	goalReady = false;
+	goalError = '';
+	private readonly goalKey = 'sleepGoalHours';
+
+	get chartMaxHours(): number {
+		return Math.max(10, this.goalHours + 1);
+	}
 
   constructor(public sleepService:SleepService) {
 		addIcons({ moon, sunny, sunnyOutline, timeOutline, barChartOutline });
@@ -26,7 +36,51 @@ export class HomePage {
 
 	async ngOnInit() {
 		// Load saved data from storage when the app opens
-		await this.sleepService.loadData();
+		await Promise.all([this.sleepService.loadData(), this.loadGoal()]);
+	}
+
+	private async loadGoal() {
+		try {
+			const { value } = await Preferences.get({ key: this.goalKey });
+			const hours = Number(value);
+			if (this.isValidGoal(hours)) {
+				this.goalHours = hours;
+			}
+		} catch {
+			this.goalError = 'Could not load your saved sleep goal.';
+		} finally {
+			this.goalReady = true;
+		}
+	}
+
+	private isValidGoal(hours: number): boolean {
+		return hours >= 1 && hours <= 24 && Number.isInteger(hours * 4);
+	}
+
+	editGoal() {
+		this.goalError = '';
+		this.editingGoal = true;
+	}
+
+	async saveGoal(hours: number) {
+		if (this.savingGoal) {
+			return;
+		}
+		if (!this.isValidGoal(hours)) {
+			this.goalError = 'Enter 1 to 24 hours in 15-minute increments.';
+			return;
+		}
+		this.savingGoal = true;
+		this.goalError = '';
+		try {
+			await Preferences.set({ key: this.goalKey, value: String(hours) });
+			this.goalHours = hours;
+			this.editingGoal = false;
+		} catch {
+			this.goalError = 'Could not save your sleep goal. Try again.';
+		} finally {
+			this.savingGoal = false;
+		}
 	}
 	
 	/*  Flip clock */
@@ -144,7 +198,7 @@ export class HomePage {
 	// A night counts for the day you woke up.
 	get weekBars() {
 		var dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-		var maxHours = 10; // top of the chart
+		var maxHours = this.chartMaxHours;
 		var bars = [];
 
 		for (var daysAgo = 6; daysAgo >= 0; daysAgo--) {

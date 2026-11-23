@@ -2,10 +2,12 @@ import { DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
-  IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonItem, IonItemOption,
+  IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonItem, IonItemOption,
   IonItemOptions, IonItemSliding, IonLabel, IonList,
   IonTitle, IonToolbar, ToastController
 } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { moonOutline, sunnyOutline } from 'ionicons/icons';
 import { OvernightSleepData } from '../data/overnight-sleep-data';
 import { StanfordSleepinessData } from '../data/stanford-sleepiness-data';
 import { SleepService } from '../services/sleep.service';
@@ -17,7 +19,7 @@ type Entry = OvernightSleepData | StanfordSleepinessData;
   templateUrl: './history.page.html',
   styleUrls: ['./history.page.scss'],
   imports: [
-    DatePipe, RouterLink, IonBackButton, IonButton, IonButtons, IonContent, IonHeader,
+    DatePipe, RouterLink, IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonIcon,
     IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel, IonList,
     IonTitle, IonToolbar
   ]
@@ -32,6 +34,10 @@ export class HistoryPage {
   error = '';
   saving = false;
   saveError = '';
+
+  constructor() {
+    addIcons({ moonOutline, sunnyOutline });
+  }
 
   async ionViewWillEnter() {
     this.loading = true;
@@ -53,6 +59,14 @@ export class HistoryPage {
 
   overnight(entry: Entry): OvernightSleepData | null {
     return entry instanceof OvernightSleepData ? entry : null;
+  }
+
+  sleepiness(entry: Entry): StanfordSleepinessData | null {
+    return entry instanceof StanfordSleepinessData ? entry : null;
+  }
+
+  sleepinessDescription(score: number): string {
+    return StanfordSleepinessData.ScaleValues[score] ?? '';
   }
 
   async remove(entry: Entry, sliding: IonItemSliding) {

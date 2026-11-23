@@ -1,7 +1,25 @@
-.day-heading {
-  margin-block: 1.4rem 0.55rem;
+.history-hint {
+  margin: 0 0 1rem;
   color: var(--journal-muted);
-  font-size: 0.95rem;
+  font-size: 0.85rem;
+}
+
+.day-group + .day-group {
+  margin-top: 1.75rem;
+}
+
+.day-heading {
+  margin-block: 0.5rem 0.75rem;
+  color: var(--ion-text-color);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.day-heading span,
+.entry-header time,
+.score-scale {
+  color: var(--journal-muted);
+  font-size: 0.85rem;
   font-weight: 600;
 }
 
@@ -12,7 +30,8 @@
 }
 
 .entry-card ion-item {
-  --inner-padding-end: 0.5rem;
+  --padding-start: 1rem;
+  --inner-padding-end: 1rem;
 }
 
 .entry-card ion-label {
@@ -20,8 +39,8 @@
 }
 
 .entry-card h3 {
-  margin-block: 0.3rem;
-  font-size: 1.04rem;
+  margin-block: 0.35rem;
+  font-size: 1.2rem;
   line-height: 1.4;
   font-weight: 650;
 }
@@ -30,13 +49,44 @@
   color: var(--journal-muted);
 }
 
-.entry-card .entry-type,
-.quality strong {
-  color: var(--ion-color-primary);
+.entry-header,
+.entry-card .entry-type {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
 }
 
-.entry-card .quality {
-  margin-top: 0.45rem;
+.entry-header {
+  justify-content: space-between;
+}
+
+.entry-card .entry-type {
+  color: var(--ion-color-primary);
+  font-weight: 600;
+}
+
+.entry-card .rating-description {
+  line-height: 1.45;
+}
+
+.sleep-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem 1.5rem;
+  margin: 0.75rem 0 0;
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--journal-border);
+}
+
+.sleep-details dt {
+  color: var(--journal-muted);
+  font-size: 0.8rem;
+}
+
+.sleep-details dd {
+  margin: 0.2rem 0 0;
+  font-size: 0.9rem;
 }
 
 .empty-state {
