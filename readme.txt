@@ -12,10 +12,17 @@
 - */1 A readme and demo video which explains how these features were implemented and their design rationale
 
 2. How long, in hours, did it take you to complete this assignment?
-
+Xinyu Zhang : 7+5+3+1 = 16 hour
 
 
 3. What online resources did you consult when completing this assignment? (list specific URLs)
+https://ionicframework.com/docs/api/datetime
+https://ionicframework.com/docs/theming/colors
+https://ionicframework.com/docs/theming/dark-mode
+https://capacitorjs.com/docs/apis/preferences
+https://developer.apple.com/design/human-interface-guidelines/dark-mode
+https://ionicframework.com/docs/native/setup
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await
 
 
 

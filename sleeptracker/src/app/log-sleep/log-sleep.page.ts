@@ -30,6 +30,7 @@ export class LogSleepPage implements OnInit {
 	wakeTime:string = '';
 	// Latest time someone can pick (right now) so they can't log the future
 	maxTime:string = '';
+	isSaving:boolean = false;
 
   constructor(public sleepService:SleepService,
 			  public toastController:ToastController,
@@ -42,6 +43,7 @@ export class LogSleepPage implements OnInit {
 
 	// Runs every time this page opens, so the form starts fresh each time
 	ionViewWillEnter() {
+		this.isSaving = false;
 		this.setDefaultTimes();
 	}
 
@@ -112,21 +114,25 @@ export class LogSleepPage implements OnInit {
 	}
 
 	async saveSleep() {
-		if (this.errorMessage != '') {
+		if (this.errorMessage != '' || this.isSaving) {
 			return;
 		}
+		this.isSaving = true;
 		var sleepData = new OvernightSleepData(new Date(this.bedtime), new Date(this.wakeTime));
-		await this.sleepService.logOvernightData(sleepData); // wait until it's really saved
 
-		var toast = await this.toastController.create({
-			message: 'Sleep saved: ' + this.durationText,
-			duration: 2000,
-			position: 'top',
-			color: 'success'
-		});
-		await toast.present();
-
-		// Go back to the home page
-		this.navController.navigateBack('/home');
-	}
+		try {
+			await this.sleepService.logOvernightData(sleepData); // wait until it's really saved
+		} catch (error) {
+			// Saving failed: stay on this page so they can try again
+			this.isSaving = false;
+			var errorToast = await this.toastController.create({
+				message: 'Could not save your sleep. Please try again.',
+				duration: 3000,
+				position: 'top',
+				color: 'danger'
+			});
+			await errorToast.present();
+			return;
+		}
+}
 }

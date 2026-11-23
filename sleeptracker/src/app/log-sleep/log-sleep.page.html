@@ -52,7 +52,7 @@
   </div>
 
   <div class="ion-padding">
-    <ion-button expand="block" class="big-button" [disabled]="errorMessage != ''" (click)="saveSleep()">
+      <ion-button expand="block" class="big-button" [disabled]="errorMessage != '' || isSaving" (click)="saveSleep()">
       <ion-icon slot="start" name="checkmark"></ion-icon>
       Save
     </ion-button>
