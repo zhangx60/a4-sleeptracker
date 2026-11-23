@@ -1,11 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      @if (choosingQuality) {
-        <ion-button [disabled]="isSaving" (click)="choosingQuality = false">Back</ion-button>
-      } @else {
-        <ion-back-button defaultHref="/home"></ion-back-button>
-      }
+      <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
     <ion-title>Log Sleep</ion-title>
   </ion-toolbar>
@@ -26,42 +22,25 @@
       </ng-template>
     </ion-modal>
 
-    @if (!choosingQuality) {
-      <h1>When did you sleep?</h1>
-      <ion-list class="time-list">
-        <ion-item lines="none">
-          <ion-label>Bedtime</ion-label>
-          <ion-datetime-button datetime="bedtime" slot="end"></ion-datetime-button>
-        </ion-item>
-        <ion-item lines="none">
-          <ion-label>Wake-up Time</ion-label>
-          <ion-datetime-button datetime="waketime" slot="end"></ion-datetime-button>
-        </ion-item>
-      </ion-list>
+    <h1>When did you sleep?</h1>
+    <ion-list class="time-list">
+      <ion-item lines="none">
+        <ion-label>Bedtime</ion-label>
+        <ion-datetime-button datetime="bedtime" slot="end"></ion-datetime-button>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-label>Wake-up Time</ion-label>
+        <ion-datetime-button datetime="waketime" slot="end"></ion-datetime-button>
+      </ion-item>
+    </ion-list>
 
-      @if (errorMessage) {
-        <p role="alert"><ion-note color="danger">{{ errorMessage }}</ion-note></p>
-      } @else {
-        <p class="duration"><span>Sleep duration</span><strong>{{ durationText }}</strong></p>
-      }
-      <ion-button expand="block" [disabled]="!!errorMessage" (click)="choosingQuality = true">
-        Continue
-      </ion-button>
+    @if (errorMessage) {
+      <p role="alert"><ion-note color="danger">{{ errorMessage }}</ion-note></p>
     } @else {
-      <h1 id="quality-title">How did you feel when you woke up?</h1>
       <p class="duration"><span>Sleep duration</span><strong>{{ durationText }}</strong></p>
-      <ion-list>
-        <ion-radio-group aria-labelledby="quality-title" [(ngModel)]="quality">
-          @for (option of qualityOptions; track option) {
-            <ion-item lines="none" class="choice-card" [class.selected]="quality === option">
-              <ion-radio [value]="option" [disabled]="isSaving">{{ option }}</ion-radio>
-            </ion-item>
-          }
-        </ion-radio-group>
-      </ion-list>
-      <ion-button expand="block" [disabled]="quality === null || isSaving" (click)="saveSleep()">
-        {{ isSaving ? 'Saving…' : 'Save Sleep' }}
-      </ion-button>
     }
+    <ion-button expand="block" [disabled]="!!errorMessage || isSaving" (click)="saveSleep()">
+      {{ isSaving ? 'Saving…' : 'Continue' }}
+    </ion-button>
   </main>
 </ion-content>

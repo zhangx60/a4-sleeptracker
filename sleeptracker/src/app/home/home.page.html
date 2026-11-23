@@ -22,20 +22,11 @@
         <ion-button expand="block" routerLink="/log-sleep">Log Sleep</ion-button>
       </section>
 
-      <section class="journal-card">
-        <h2><ion-icon name="sunny-outline" aria-hidden="true"></ion-icon>Today’s Sleepiness</h2>
-        @if (todaySleepiness.length) {
-          <ul>
-            @for (entry of todaySleepiness; track entry.id) {
-              <li><span>{{ entry.summaryString() }}</span><time>{{ entry.timeString() }}</time></li>
-            }
-          </ul>
-        } @else {
-          <p>No check-ins yet today.</p>
-        }
-        <ion-button expand="block" fill="outline" routerLink="/log-sleepiness">Log Sleepiness</ion-button>
-      </section>
     </div>
+    <ion-button expand="block" fill="outline" routerLink="/log-sleepiness">
+      <ion-icon slot="start" name="sunny-outline" aria-hidden="true"></ion-icon>
+      Log Sleepiness
+    </ion-button>
 
     <ion-button class="history-link" expand="block" fill="clear" routerLink="/history">
       <ion-icon slot="start" name="time-outline" aria-hidden="true"></ion-icon>

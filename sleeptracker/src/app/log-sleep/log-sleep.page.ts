@@ -3,11 +3,11 @@ import { FormsModule } from '@angular/forms';
 import {
 	IonContent, IonHeader, IonTitle, IonToolbar,
 	IonButtons, IonBackButton, IonList, IonItem, IonLabel,
-	IonDatetime, IonDatetimeButton, IonModal, IonButton, IonNote, IonRadio, IonRadioGroup,
+	IonDatetime, IonDatetimeButton, IonModal, IonButton, IonNote,
 	ToastController, NavController
 } from '@ionic/angular/standalone';
 import { SleepService } from '../services/sleep.service';
-import { OvernightSleepData, SleepQuality, sleepQualityOptions } from '../data/overnight-sleep-data';
+import { OvernightSleepData } from '../data/overnight-sleep-data';
 
 @Component({
   selector: 'app-log-sleep',
@@ -17,7 +17,7 @@ import { OvernightSleepData, SleepQuality, sleepQualityOptions } from '../data/o
   imports: [
 	IonContent, IonHeader, IonTitle, IonToolbar,
 	IonButtons, IonBackButton, IonList, IonItem, IonLabel,
-	IonDatetime, IonDatetimeButton, IonModal, IonButton, IonNote, IonRadio, IonRadioGroup,
+		IonDatetime, IonDatetimeButton, IonModal, IonButton, IonNote,
 	FormsModule
   ]
 })
@@ -28,9 +28,6 @@ export class LogSleepPage {
 	// Latest time someone can pick (right now) so they can't log the future
 	maxTime:string = '';
 	isSaving:boolean = false;
-  choosingQuality = false;
-  quality: SleepQuality | null = null;
-  readonly qualityOptions = sleepQualityOptions;
 
   constructor(public sleepService:SleepService,
 			  public toastController:ToastController,
@@ -40,8 +37,6 @@ export class LogSleepPage {
 	ionViewWillEnter() {
 		this.isSaving = false;
 		this.setDefaultTimes();
-    this.choosingQuality = false;
-    this.quality = null;
 	}
 
 	// Default: went to bed yesterday 11:00 PM, woke up today 7:00 AM
@@ -114,11 +109,11 @@ export class LogSleepPage {
 	}
 
 	async saveSleep() {
-		if (this.errorMessage || this.isSaving || !this.quality) {
+		if (this.errorMessage || this.isSaving) {
 			return;
 		}
 		this.isSaving = true;
-		var sleepData = new OvernightSleepData(new Date(this.bedtime), new Date(this.wakeTime), this.quality);
+				var sleepData = new OvernightSleepData(new Date(this.bedtime), new Date(this.wakeTime));
 
 		try {
 			await this.sleepService.logOvernightData(sleepData); // wait until it's really saved
@@ -136,14 +131,16 @@ export class LogSleepPage {
 		}
 
 		var toast = await this.toastController.create({
-			message: 'Sleep saved: ' + this.durationText,
+						message: 'Sleep saved: ' + this.durationText + '. How alert do you feel now?',
 			duration: 2000,
 			position: 'top',
 			color: 'success'
 		});
 		await toast.present();
 
-		// Go back to the home page
-		this.navController.navigateBack('/home');
+		// Go straight to the sleepiness check-in.
+		// replaceUrl: this form is taken out of the back history,
+		// so Back on the sleepiness page goes home instead of to this form again.
+		this.navController.navigateForward('/log-sleepiness', { replaceUrl: true });
 	}
 }
