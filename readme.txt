@@ -1,8 +1,8 @@
---Readme document for *author(s)*, *email(s)*, *UCI id(s)*--
+--Readme document for *Xinyu Zhang, Yilin Shen*, *zhangx60@uci.edu, yilis15@uci.edu*, *36567566, 72003168*--
 
 1. How many assignment points do you believe you completed (replace the *'s with your numbers)?
 
-*/10
+10/10
 - 1/1 The ability to log overnight sleep
 - 1/1 The ability to log sleepiness during the day
 - 1/1 The ability to view these two categories of logged data
@@ -23,7 +23,10 @@ https://capacitorjs.com/docs/apis/preferences
 https://developer.apple.com/design/human-interface-guidelines/dark-mode
 https://ionicframework.com/docs/native/setup
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await
-
+https://www.med.upenn.edu/cbti/assets/user-content/documents/Stanford%20Sleepiness%20Scale.pdf
+https://ionicframework.com/docs/angular/lifecycle
+https://capacitorjs.com/docs/v7/apis/local-notifications
+https://angular.dev/guide/templates/control-flow
 
 
 4. What classmates or other individuals did you consult as part of this assignment? What did you discuss?
