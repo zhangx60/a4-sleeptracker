@@ -3,17 +3,17 @@
 1. How many assignment points do you believe you completed (replace the *'s with your numbers)?
 
 */10
-- */1 The ability to log overnight sleep
-- */1 The ability to log sleepiness during the day
-- */1 The ability to view these two categories of logged data
-- */2 Either using a native device resource or backing up logged data
-- */2 Following good principles of mobile design
-- */2 Creating a compelling app
-- */1 A readme and demo video which explains how these features were implemented and their design rationale
+- 1/1 The ability to log overnight sleep
+- 1/1 The ability to log sleepiness during the day
+- 1/1 The ability to view these two categories of logged data
+- 2/2 Either using a native device resource or backing up logged data
+- 2/2 Following good principles of mobile design
+- 2/2 Creating a compelling app
+- 1/1 A readme and demo video which explains how these features were implemented and their design rationale
 
 2. How long, in hours, did it take you to complete this assignment?
-Xinyu Zhang : 7+5+3+1 = 16 hour
-
+Xinyu Zhang: 7+5+3+1 = 16 hour
+Yilin Shen: 4+6+2 = 12 hour
 
 3. What online resources did you consult when completing this assignment? (list specific URLs)
 https://ionicframework.com/docs/api/datetime
@@ -37,7 +37,7 @@ Yilin also implemented daily reminders using Capacitor Local Notifications and i
 
 
 5. Is there anything special we need to know in order to run your code?
-
+NA
 
 --Aim for no more than two sentences for each of the following questions.--
 
@@ -50,32 +50,23 @@ and adaptable for a quick break between classes.
 
 
 7. Did you design your app specifically for iOS or Android, or both?
-
 We prioritized the mobile layout and used Ionic back buttons and date pickers for familiar controls. The app uses the same night theme in both browser and native builds.
 
 
 8. How can a person log overnight sleep in your app? Why did you choose to support logging overnight sleep in this way?
-
-Tap Log Sleep, check your bedtime and wake-up time, then tap Continue to rate how you felt on waking and save the entry. The duration preview and time checks help catch mistakes before saving.
-
+Tap Log Sleep, choose your bedtime and wake-up time, then tap Continue to save the overnight entry and open the sleepiness check-in. The duration preview and time validation help catch mistaken dates before saving.
 
 9. How can a person log sleepiness during the day in your app? Why did you choose to support logging sleepiness in this way?
-
-On the Log Sleepiness page, pick one of the seven Stanford Sleepiness Scale levels and tap Save Sleepiness. The app records the current time automatically so it is quick to check in several times a day.
-
+Tap Log Sleepiness, choose one of the seven Stanford Sleepiness Scale levels, and tap Save Sleepiness. The check-in time defaults to the current time or, if you just logged overnight sleep, your wake-up time, and you can adjust it before saving.
 
 10. How can a person view the data they logged in your app? Why did you choose to support viewing logged data in this way?
-
-Open History to see overnight sleep and daytime check-ins in one timeline grouped by date. Each overnight card puts the duration and sleep quality together so you can see how you felt alongside how long you slept.
-
+Open History to see overnight sleep and daytime sleepiness in one timeline grouped by date. Overnight cards highlight duration, bedtime, and wake-up time, while daytime cards show the check-in time and score out of seven.
 
 11. Which feature choose--using a native device resource, backing up logged data, or both?
-
 We used both Capacitor Local Notifications for daily reminders and Capacitor Preferences to keep both types of logs after closing or refreshing the app.
 
 
 12. If you used a native device resource, what feature did you add? How does this feature change the app's experience for a user?
-
 In the native app, users can choose a daily check-in time on the Log sleepiness page and turn the reminder off whenever they want. The device notification helps users remember to check in during the day, and tapping it opens the rating page.
 
 
@@ -85,5 +76,4 @@ and every add or delete is written to storage before the screen updates.
 Saved logs are loaded when the app opens, so they stay after closing or refreshing the app.
 
 14. How does your app implement or follow principles of good mobile design?
-
-The home screen shows the latest sleep, today's check-ins, and buttons for both logging tasks, while time validation and disabled Save buttons help prevent mistakes. Ionic back buttons and date pickers keep navigation familiar, and Undo gives users a way to recover a deleted entry.
+The home screen shows the latest sleep, an editable sleep goal, and a seven-day chart, with quick access to both logging tasks. Time validation helps prevent mistakes, and Undo lets users recover an entry after deleting it with a swipe.
