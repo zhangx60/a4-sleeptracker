@@ -27,6 +27,9 @@ https://www.med.upenn.edu/cbti/assets/user-content/documents/Stanford%20Sleepine
 https://ionicframework.com/docs/angular/lifecycle
 https://capacitorjs.com/docs/v7/apis/local-notifications
 https://angular.dev/guide/templates/control-flow
+https://ionicframework.com/docs/angular/navigation
+https://ionicframework.com/docs/api/item-sliding
+https://ionicframework.com/docs/api/toast
 
 
 4. What classmates or other individuals did you consult as part of this assignment? What did you discuss?
